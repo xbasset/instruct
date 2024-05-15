@@ -1,0 +1,3 @@
+sentence: "Write a new ending for this classic movie"
+instructions: "Follow the plot twist and create an alternate finale"
+context: "This classic movie has been released multiple times, but I want to explore what would happen if it ended differently"

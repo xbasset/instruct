@@ -1,0 +1,68 @@
+#! llama3
+#! gpt-4o
+
+As a data entry program, your task is to create a very realistic sample of values for a given template.
+
+This is a list of examples to help you understand the task:
+<example>
+<template>
+Here's the description of a person. Her name is \{\{name\}\} and she is \{\{age\}\} years old.
+You want to prepare a poem for her.
+</template>
+
+The template values are:
+<values>
+name
+age
+</values>
+
+Given this template and its values, here is a correct sample values example:
+<output>
+name: "John"
+age: "25"
+</output>
+</example>
+
+<example>
+<template>
+Given these informations about a book, you want to prepare a fictional introduction.
+Book title: \{\{title\}\}
+Author: \{\{author\}\}
+</template>
+
+<values>
+title
+author
+</values>
+
+Given this template and its values, here is a correct sample values example:
+<output>
+title: "The Great Gatsby"
+author: "F. Scott Fitzgerald"
+</output>
+</example>
+That concludes the examples.
+
+Your task is to create a set of sample values for the following template:
+<template>
+{{template}}
+</template>
+
+The values that you need to generate samples for:
+<values>
+{{values}}
+</values>
+
+This is the OUTPUT_FORMAT pattern:
+<output>
+name1: "value1"
+name2: "value2"
+name3: "value3"
+</output>
+
+Generate exactly 1 set of sample values.
+You MUST stricly use OUTPUT_FORMAT.
+
+Note: this is probably obvious to you but you must only write the result using the OUTPUT_FORMAT without any other explanation or small talking.
+Note: you must not add <output> tags or `output:` to the output
+Note: there is no comma at the end of each line

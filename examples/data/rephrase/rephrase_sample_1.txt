@@ -1,0 +1,3 @@
+instructions: "Write the sentence in a concise manner."
+sentence: "The company has been experiencing financial difficulties for months now."
+context: "A corporate report"

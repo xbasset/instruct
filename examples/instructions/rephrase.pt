@@ -1,0 +1,22 @@
+#! llama3
+
+Act as a talented writer, your task is to rephrase the given sentence following the instructions below.
+
+{% if context %}This is the context of the sentence:
+<context>
+{{context}}
+</context>{% endif %}
+
+Give the following sentence:
+<sentence>
+{{sentence}}
+</sentence>
+
+Rephrase it following the instructions below.
+<instructions>
+{{instructions}}
+</instructions>
+
+Note: this may be obvious, but you just have to rephrase the sentence, not explain how you do it or add superfluous information.
+
+Go!

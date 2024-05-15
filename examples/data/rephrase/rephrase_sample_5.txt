@@ -1,0 +1,3 @@
+context: "A company's annual report highlights its financial performance over the past year."
+sentence: "The company's profits have been stagnant for three years."
+instructions: "Rephrase it in a way that emphasizes the positive aspects."

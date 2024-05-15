@@ -1,0 +1,29 @@
+ollama:
+  mistral:
+    ollama_endpoint: "http://localhost:11434"
+  llama3:
+    ollama_endpoint: "http://localhost:11434"
+
+openai:
+  gpt-4o:
+    openai_api_key: <your-openai-api-key>
+  gpt-4-turbo-preview:
+    openai_api_key: <your-openai-api-key>
+
+
+azure:
+  gpt-4-turbo:
+    gpt4_turbo_azure_openai_api_base: <your-azure-openai-api-base>
+    gpt4_turbo_azure_openai_api_version: <your-azure-openai-api-version>
+    gpt4_turbo_azure_openai_key: <your-azure-openai-key>
+    gpt4_turbo_azure_openai_deployment_id: <your-azure-openai-deployment-id>
+
+mistral:
+  mistral-large-2402:
+    mistral_api_key: <your-mistral-api-key>
+
+groq:
+  llama3-70b-8192:
+    api_key: <your-groq-api-key>
+  mixtral-8x7b-32768:
+    api_key: <your-groq-api-key>

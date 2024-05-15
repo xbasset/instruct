@@ -1,0 +1,5 @@
+ollama:
+  mistral:
+    ollama_endpoint: "http://localhost:11434"
+  llama3:
+    ollama_endpoint: "http://localhost:11434"

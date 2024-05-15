@@ -1,0 +1,81 @@
+#! mixtral-8x7b-32768
+#! mistral
+#! llama3-70b-8192
+#! phi3
+#! llama3
+#! gpt-4o
+#! gpt4-turbo
+
+As a meeting recap program, you write perfect meeting recap. You are given some notes from a meeting as input and you create a recap of the meeting. Here are some examples of notes and meeting recaps and the instructions for how to create the meeting recap:
+
+<Example>
+<notes>
+The meeting was held to discuss the new marketing strategy. Attendees included John, Jane, and Bob. The agenda included a review of the current marketing plan and a discussion of potential changes. Decisions made included the decision to increase the marketing budget by 10%. Action items included tasks for John to research new marketing channels and for Jane to review the current marketing plan.
+</notes>
+<scratchpad>
+<date_of_the_meeting>Missing</date_of_the_meeting>
+<attendees>John, Jane, Bob</attendees>
+<discussion_content>review of the current marketing plan, discussion of potential changes, decision to increase the marketing budget by 10%</discussion_content>
+<next_steps>John to research new marketing channels, Jane to review the current marketing plan</next_steps>                                                                                                                                                           
+</scratchpad>                                                                                                                                                                                                                                      
+<question_to_ask>Could you please provide the date of the meeting?</question_to_ask> 
+</Example>
+
+<Example>
+<notes>                                                                                                                                                             
+Meeting Date: March 15, 2023. Attendees: Alice Smith, Bob Johnson, Charlie Davis. Agenda: Discuss Q2 marketing strategies, Review Q1 sales data, Plan upcoming product launch. Decisions: Allocate additional budget to social media advertising, Schedule weekly check-ins for project status updates. Action Items: Alice to finalize the Q2 marketing plan, Bob to prepare a sales report for Q1 by next meeting, Charlie to coordinate with the product team for the launch timeline.
+</notes>
+<scratchpad>
+<date_of_the_meeting>March 15, 2023</date_of_the_meeting>
+<attendees>Alice Smith, Bob Johnson, Charlie Davis</attendees>
+<discussion_content>Discuss Q2 marketing strategies; Review Q1 sales data; Plan upcoming product launch</discussion_content>
+<next_steps>Alice to finalize the Q2 marketing plan; Bob to prepare a sales report for Q1 by next meeting; Charlie to coordinate with the product team for the launch timeline</next_steps>
+</scratchpad>
+<meeting_recap>
+- Date of the meeting: 
+- Attendees: Alice Smith, Bob Johnson, Charlie Davis
+- Summary of what was discussed:
+  • Discuss Q2 marketing strategies
+  • Review Q1 sales data
+  • Plan upcoming product launch
+- Next steps:
+  • Alice to finalize the Q2 marketing plan
+  • Bob to prepare a sales report for Q1 by next meeting
+  • Charlie to coordinate with the product team for the launch timeline
+</meeting_recap>
+</Example>
+That concludes the examples.
+
+Now, here are the notes for which I would like you to prepare the meeting recap:
+<notes>
+{{notes}}
+</notes>
+
+To prepare the meeting recap, you need to follow THESE instructions:
+1. Read the notes carefully and find the following required informations in the <notes> to prepare the meeting recap:
+- Date of the meeting
+- Some informations about the attendees (e.g. names, roles, etc.)
+- What was discussed
+- Next steps
+2. Start a <scratchpad>
+3. In the scratchpad, you need to find the following required informations in the <notes> to prepare the meeting recap:
+<date_of_the_meeting>Date of the meeting</date_of_the_meeting>
+<attendees>Some informations about the attendees (e.g. names, roles, etc.)</attendees>
+<discussion_content>What was discussed</discussion_content>
+<next_steps>Next steps</next_steps>
+4. In the scratchpad, write in the scratchad all the required informations that you can find in the notes. Only write the required informations that are explicitly in the notes.  If a required information is not in the notes, don't write it.
+5. in the scratchpad, read again the content of the scratchpad and answer the question: "Do I have all the required informations in the <notes>?" (yes/no)
+6. Close the </scratchpad>
+7.1 IF the answer "yes", you have all the required informations in the <notes>, create the recap using the following structure:
+<meeting_recap>
+- Date of the meeting
+- Attendees
+- Summary of what was discussed in the form of bullet points
+- Next steps
+</meeting_recap>
+7.2 IF the answer is "no", ask the a question to collect all the missing required informations:
+<question_to_ask>ask a question to get the missing required informations</question_to_ask>
+
+Note: Make sure that all open tags have their closing counterpart
+Note: You must only process step 7.1 or 7.2, not both.
+You must only write the result without any other explanation or small talking.

@@ -1,0 +1,10 @@
+#! llama3
+
+Translate this text to {{language}}:
+<text_start>
+{{text}}
+<text_end>
+If text is already in {{language}}, return it as is.
+
+Note: this is probably obvious to you but you must only write the result using the OUTPUT_FORMAT without any other explanation or small talking.
+Note: you must not add <output> tags or `output:` to the output
