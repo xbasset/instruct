@@ -36,6 +36,7 @@ def cli():
     run_parser = subparsers.add_parser("run")
     run_parser.add_argument("file", type=str)
     run_parser.add_argument("--input", type=str)
+    run_parser.add_argument("--output", type=str)
     run_parser.add_argument("--temperature", type=float, default=0.0)
     run_parser.add_argument("--max_tokens", type=int, default=200)
     run_parser.add_argument("--model", type=str)
@@ -47,7 +48,7 @@ def cli():
 
     if args.command == "run":
         from src.run import run
-        run(args.file, input=args.input if args.input else None, temperature=args.temperature, max_tokens=args.max_tokens, model=args.model)
+        run(args.file, input=args.input if args.input else None, output=args.output if args.output else None , temperature=args.temperature, max_tokens=args.max_tokens, model=args.model)
 
     elif args.command == "sample":
         if args.output:

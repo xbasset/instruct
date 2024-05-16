@@ -11,7 +11,7 @@ import time
 console = Console()
 
 
-def run(filepath, input=None, temperature=0, max_tokens=200, model=None):
+def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=None):
     try:
         console.print(
             f"Running: [bold green]{filepath}[/bold green]")
@@ -24,7 +24,7 @@ def run(filepath, input=None, temperature=0, max_tokens=200, model=None):
             # Read values from the input file (assumed to be a YAML file)
             with open(input, "r") as f:
                 values = yaml.load(f, Loader=yaml.FullLoader)
-            console.print(f"[italic]{values}[/italic]")
+            # console.print(f"[italic]{values}[/italic]")
         else:
             # Generate sample values for the template
             values = generate_sample_values(filepath)
@@ -45,6 +45,11 @@ def run(filepath, input=None, temperature=0, max_tokens=200, model=None):
         console.print(
             Markdown(f"# Result with **{pt.matching_model.name}** model:"))
         console.print(Markdown(f"```markdown\n{result}\n```"))
+        
+        if output and result:
+            with open(output, "w") as f:
+                f.write(result)
+            console.print(f"Output written to [bold]{output}[/bold]")
 
         performance_text = Text(
             f"Total: {end_time_run - start_time:.2f}s (Values: {end_time_values - start_time:.2f}s, Run:{end_time_run - end_time_values:.2f}s)", style="italic dim")
