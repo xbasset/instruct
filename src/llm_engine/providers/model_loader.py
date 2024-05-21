@@ -1,11 +1,11 @@
 import configparser
 
-from llm_engine.model import Model
-from llm_engine.providers.openai_llm import OpenAILLM
-from llm_engine.providers.mistralai_llm import MistralAILLM
-from llm_engine.providers.ollama_llm import OllamaLLM
-from llm_engine.providers.openai_vision_llm import OpenAIVisionLLM
-from llm_engine.providers.groq_llm import GroqLLM
+from src.llm_engine.model import Model
+from src.llm_engine.providers.openai_llm import OpenAILLM
+from src.llm_engine.providers.mistralai_llm import MistralAILLM
+from src.llm_engine.providers.ollama_llm import OllamaLLM
+from src.llm_engine.providers.openai_vision_llm import OpenAIVisionLLM
+from src.llm_engine.providers.groq_llm import GroqLLM
 
 import logging
 import os

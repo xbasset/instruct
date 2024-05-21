@@ -1,5 +1,5 @@
-from pt import PT
-from src.generate_sample_values import generate_sample_values
+from src.pt import PT
+from src.sample import generate_sample_values
 import yaml
 from rich.console import Console
 from rich.markdown import Markdown
@@ -27,6 +27,7 @@ def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=
             # console.print(f"[italic]{values}[/italic]")
         else:
             # Generate sample values for the template
+            console.log("No input file provided, generating sample values")
             values = generate_sample_values(filepath)
             console.print(f"Generated input: [dim]{values}[/dim]" if values else "")
         end_time_values = time.time()

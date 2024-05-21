@@ -1,33 +1,31 @@
 
 
 import os
-from llm_engine.model import Model
-from pt import PT
+from src.llm_engine.model import Model
+from src.pt import PT
 
+import logging
 
-from ollama import Client
+from groq import Groq
 
+class GroqLLM(Model):
 
-class OllamaLLM(Model):
-
-    def __init__(self, ollama_conf):
+    def __init__(self, groq_conf):
 
         try:
-            self._name = ollama_conf["model_name"]
-            self.model = ollama_conf.get(
-                "model") if ollama_conf.get("model") else None
-            self.endpoint = ollama_conf.get("endpoint") if ollama_conf.get(
-                "endpoint") else None
+            self._name = groq_conf["model_name"]
+            self.model = groq_conf.get(
+                "model") if groq_conf.get("model") else None
 
-            if self.endpoint is None or self.model is None:
+            if self.model is None:
                 raise Exception(
-                    f"🔴 model and endpoint not set in models conf: {ollama_conf}")
+                    f"🔴 model not set in models conf: {groq_conf}")
 
-            self.client = Client(host=ollama_conf["endpoint"])
+            self.client = Groq(api_key=groq_conf["api_key"])
 
         except Exception as e:
             raise Exception(
-                f"🔴 Error initializing OllamaLLM __init__  : {e}")
+                f"🔴 Error initializing GroqLLM __init__  : {e}")
 
     def chatCompletion(self, messages, temperature, max_tokens, n_responses=1,
                        frequency_penalty=0, presence_penalty=0, stream=False, stream_callback=None, json_format=False):
@@ -38,16 +36,17 @@ class OllamaLLM(Model):
                 logging.warning("n_responses must be 1 if stream is True")
 
             if stream:
-
-                stream_response = self.client.chat(
+                stream_response = self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
                     stream=True,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
                 )
 
                 complete_text = ""
                 for chunk in stream_response:
-                    partial_token = chunk['message']['content']
+                    partial_token = chunk.choices[0].delta.content
                     complete_text += partial_token if partial_token else ""
                     if stream_callback is not None:
                         try:
@@ -56,15 +55,19 @@ class OllamaLLM(Model):
                             logging.error(
                                 f"🔴 Error in streamCallback : {e}")
             else:
-                response = self.client.chat(
-                    model=self.model, messages=messages)
+                response = self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=temperature,
+                    max_tokens=max_tokens
+                    )
 
-                complete_text = response['message']['content']
+                complete_text = response.choices[0].message.content
             # [content.text for content in stream_response.choices]
             return [complete_text]
 
         except Exception as e:
-            logging.error(f"Error in OllamaLLM chat: {e}")
+            logging.error(f"Error in GroqLLM chat: {e}")
 
     def invoke(self, messages, temperature, max_tokens, n_responses=1,
                frequency_penalty=0, presence_penalty=0, stream=False, stream_callback=None, json_format=False):
@@ -76,7 +79,7 @@ class OllamaLLM(Model):
             return responses
         except Exception as e:
             raise Exception(
-                f"🔴 Error in OllamaAILLM: {e} - model: {self.model}")
+                f"🔴 Error in GroqLLM: {e} - model: {self.model}")
 
     def invoke_from_pt(self, pt: PT, temperature, max_tokens, n_responses=1,
                         frequency_penalty=0, presence_penalty=0, stream=False, stream_callback=None, json_format=False):
@@ -92,4 +95,4 @@ class OllamaLLM(Model):
             return responses
         except Exception as e:
             raise Exception(
-                f"🔴 Error in OllamaAILLM: > {e} - model: {self.model}")
+                f"🔴 Error in GroqLLM: > {e} - model: {self.model}")

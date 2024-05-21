@@ -1,5 +1,5 @@
 from openai import OpenAI, AzureOpenAI, RateLimitError
-from llm_engine.model import Model
+from src.llm_engine.model import Model
 import tiktoken
 import uuid
 
@@ -9,7 +9,7 @@ from typing import List
 
 import os
 
-from pt import PT
+from src.pt import PT
 
 
 class OpenAILLM(Model):

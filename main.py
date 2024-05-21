@@ -16,7 +16,7 @@ logging.basicConfig(
 install()
 
 def check(pt_filepath):
-    from pt import PT
+    from src.pt import PT
     pt = PT(pt_filepath)
 
     # Check if the template_values are available
@@ -52,12 +52,12 @@ def cli():
 
     elif args.command == "sample":
         if args.output:
-            from src.generate_sample_values import generate_sample_values, write_output
+            from src.sample import generate_sample_values, write_output
             values = generate_sample_values(
                 args.file, write_to_file=args.output, model=args.model)
             print(values)
         else:
-            from src.generate_sample_values import generate_sample_values
+            from src.sample import generate_sample_values
             values = generate_sample_values(args.file, model=args.model)
             print(values)
             

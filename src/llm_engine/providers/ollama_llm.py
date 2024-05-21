@@ -1,35 +1,33 @@
-from mistralai.models.chat_completion import ChatMessage
-from mistralai.client import MistralClient
-import logging
+
+
 import os
-from llm_engine.model import Model
-from pt import PT
-
-logging.basicConfig(level=logging.ERROR)
+from src.llm_engine.model import Model
+from src.pt import PT
 
 
-class MistralAILLM(Model):
+from ollama import Client
 
-    def __init__(self, mistral_conf):
+
+class OllamaLLM(Model):
+
+    def __init__(self, ollama_conf):
 
         try:
-            self._name = mistral_conf["model_name"]
-            api_key = mistral_conf["api_key"]
-            self.model = mistral_conf["api_model"]
-
-            endpoint = mistral_conf.get("endpoint") if mistral_conf.get(
+            self._name = ollama_conf["model_name"]
+            self.model = ollama_conf.get(
+                "model") if ollama_conf.get("model") else None
+            self.endpoint = ollama_conf.get("endpoint") if ollama_conf.get(
                 "endpoint") else None
-            api_type = "azure" if mistral_conf.get(
-                "endpoint") else "la_plateforme"
 
-            self.client = MistralClient(
-                api_key=api_key,
-                endpoint=endpoint if api_type == 'azure' else "https://api.mistral.ai",
-            )
+            if self.endpoint is None or self.model is None:
+                raise Exception(
+                    f"🔴 model and endpoint not set in models conf: {ollama_conf}")
+
+            self.client = Client(host=ollama_conf["endpoint"])
 
         except Exception as e:
             raise Exception(
-                f"🔴 Error initializing MistralAILLM __init__  : {e}")
+                f"🔴 Error initializing OllamaLLM __init__  : {e}")
 
     def chatCompletion(self, messages, temperature, max_tokens, n_responses=1,
                        frequency_penalty=0, presence_penalty=0, stream=False, stream_callback=None, json_format=False):
@@ -39,21 +37,17 @@ class MistralAILLM(Model):
                 n_responses = 1
                 logging.warning("n_responses must be 1 if stream is True")
 
-            # Convert messages into Mistral ChatMessages
-            if len(messages) == 1:
-                messages = [ChatMessage(
-                    role='user', content=messages[0]['content'])]
-            else:
-                messages = [ChatMessage(
-                    role=message['role'], content=message['content']) for message in messages]
-
             if stream:
-                stream_response = self.client.chat_stream(
-                    model=self.model, messages=messages, temperature=temperature, max_tokens=max_tokens)
+
+                stream_response = self.client.chat(
+                    model=self.model,
+                    messages=messages,
+                    stream=True,
+                )
 
                 complete_text = ""
                 for chunk in stream_response:
-                    partial_token = chunk.choices[0].delta.content
+                    partial_token = chunk['message']['content']
                     complete_text += partial_token if partial_token else ""
                     if stream_callback is not None:
                         try:
@@ -63,14 +57,14 @@ class MistralAILLM(Model):
                                 f"🔴 Error in streamCallback : {e}")
             else:
                 response = self.client.chat(
-                    model=self.model, messages=messages, temperature=temperature, max_tokens=max_tokens)
+                    model=self.model, messages=messages)
 
-                complete_text = response.choices[0].message.content
+                complete_text = response['message']['content']
             # [content.text for content in stream_response.choices]
             return [complete_text]
 
         except Exception as e:
-            logging.error(f"💨❌: Error in MistralAILLM: {e}")
+            logging.error(f"Error in OllamaLLM chat: {e}")
 
     def invoke(self, messages, temperature, max_tokens, n_responses=1,
                frequency_penalty=0, presence_penalty=0, stream=False, stream_callback=None, json_format=False):
@@ -82,7 +76,7 @@ class MistralAILLM(Model):
             return responses
         except Exception as e:
             raise Exception(
-                f"🔴 Error in MistralAILLM.invoke: {e} - model: {self.model}")
+                f"🔴 Error in OllamaAILLM: {e} - model: {self.model}")
 
     def invoke_from_pt(self, pt: PT, temperature, max_tokens, n_responses=1,
                         frequency_penalty=0, presence_penalty=0, stream=False, stream_callback=None, json_format=False):
@@ -91,10 +85,11 @@ class MistralAILLM(Model):
             if self.model not in pt.models:
                 logging.warning(
                     f"{pt} does not contain model: {self.model} in its dashbangs")
+
             messages = [{"role": "user", "content": pt.prompt}]
             responses = self.invoke(messages, temperature, max_tokens, n_responses=n_responses,
                                     frequency_penalty=frequency_penalty, presence_penalty=presence_penalty, stream=stream, stream_callback=stream_callback, json_format=json_format)
             return responses
         except Exception as e:
             raise Exception(
-                f"Error in Mistral AI chat : {e}")
+                f"🔴 Error in OllamaAILLM: > {e} - model: {self.model}")
