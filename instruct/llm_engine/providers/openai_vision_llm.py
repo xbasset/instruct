@@ -1,11 +1,11 @@
 from openai import OpenAI, AzureOpenAI, RateLimitError
-from src.llm_engine.model import Model
-from src.llm_engine.providers.openai_llm import OpenAILLM
+from instruct.llm_engine.model import Model
+from instruct.llm_engine.providers.openai_llm import OpenAILLM
 import tiktoken
 import logging
 from typing import List
 
-from src.pt import PT
+from instruct.pt import PT
 
 
 class OpenAIVisionLLM(OpenAILLM):

@@ -1,5 +1,5 @@
-from src.pt import PT
-from src.sample import generate_sample_values
+from instruct.pt import PT
+from instruct.sample import generate_sample_values
 import yaml
 from rich.console import Console
 from rich.markdown import Markdown

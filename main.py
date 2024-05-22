@@ -16,7 +16,7 @@ logging.basicConfig(
 install()
 
 def check(pt_filepath):
-    from src.pt import PT
+    from instruct.pt import PT
     pt = PT(pt_filepath)
 
     # Check if the template_values are available
@@ -47,17 +47,17 @@ def cli():
     args = parser.parse_args()
 
     if args.command == "run":
-        from src.run import run
+        from instruct.run import run
         run(args.file, input=args.input if args.input else None, output=args.output if args.output else None , temperature=args.temperature, max_tokens=args.max_tokens, model=args.model)
 
     elif args.command == "sample":
         if args.output:
-            from src.sample import generate_sample_values, write_output
+            from instruct.sample import generate_sample_values, write_output
             values = generate_sample_values(
                 args.file, write_to_file=args.output, model=args.model)
             print(values)
         else:
-            from src.sample import generate_sample_values
+            from instruct.sample import generate_sample_values
             values = generate_sample_values(args.file, model=args.model)
             print(values)
             

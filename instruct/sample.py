@@ -1,4 +1,4 @@
-from src.pt import PT
+from instruct.pt import PT
 import logging
 import datetime
 import yaml
@@ -14,6 +14,7 @@ def generate_sample_values(filepath, write_to_file=False, model=None):
         template_values = pt.template_values
         
         if len(template_values) == 0:
+            print(f"No template values found in {filepath}")
             return {}
 
         print(f"Generating sample values for {filepath}", f" with {model}" if model else "")

@@ -1,4 +1,4 @@
-from src.pt import PT
+from instruct.pt import PT
 import logging
 
 pt = PT("examples/instructions/translation.pt",

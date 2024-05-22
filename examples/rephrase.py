@@ -1,4 +1,4 @@
-from src.pt import PT
+from instruct.pt import PT
 import logging
 import os
 from rich.console import Console
