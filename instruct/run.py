@@ -37,7 +37,7 @@ def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=
         
         # Run the prompt template with the given values
         pt = PT(filepath, forced_model=model, **values)
-        console.log(f"[dim blue]Running: [bold]{pt.matching_model.name}[/bold] with Temp.: {temperature}, {max_tokens} tokens max[/dim blue]")
+        console.log(f"[dim blue]Running: [/dim blue][bold green]{pt.matching_model.name}[/bold green][dim blue] with Temp.: {temperature}, {max_tokens} tokens max[/dim blue]")
         result = pt.run(temperature=temperature, max_tokens=max_tokens)
         end_time_run = time.time()
 

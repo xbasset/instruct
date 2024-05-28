@@ -17,13 +17,16 @@ def create_models_yaml():
 
     # Create the file if it doesn't exist
     if not models_yaml.exists():
-        with models_yaml.open("w") as file:
-            file.write("""ollama:
-  mistral:
-    ollama_endpoint: "http://localhost:11434"
-""")
-        console.print(Markdown(f"Created defaut models.yaml at {models_yaml} with default `ollama` configuration."))
-        console.print(f"Please update the configuration with your own API keys and endpoints. See the documentation for more details: https://github.com/xbasset/instruct")
+        # read the models-example-exhaustive.yaml file and write it to the models.yaml file
+        models_example_exhaustive = Path(__file__).parent / "models-example-exhaustive.yaml"
+        with open(models_example_exhaustive, "r") as f:
+            models_yaml_content = f.read()
+        with open(models_yaml, "w") as f:
+            f.write(models_yaml_content)
+
+    
+        console.print(Markdown(f"[{models_yaml}]({models_yaml}) created with default configuration file."))
+        console.print(Markdown(f"Update the configuration to start using the `instruct` CLI."))
 
 # Call the function
 create_models_yaml()
