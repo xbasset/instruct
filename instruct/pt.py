@@ -36,12 +36,12 @@ class PT:
 
         try:
             from instruct.llm_engine.providers.model_loader import ModelLoader
-            self.available_models, _ = ModelLoader().providers
-            console.print(f"[dim]available models: {self.available_models}[/dim]")
+            self.available_models = ModelLoader().providers
+            # console.print(f"[dim]available models: {self.available_models}[/dim]")
         except Exception as e:
-            logging.debug(
-                f"{self.filepath} > available_models loading: {e}")
             self.available_models = None
+            raise Exception(
+                f"Error loading available models: {e}")
 
         if forced_model is not None and self.available_models is not None:
             console.print(f"forced model: {forced_model}")

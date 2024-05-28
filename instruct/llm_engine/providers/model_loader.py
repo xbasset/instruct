@@ -42,11 +42,22 @@ class ModelLoader:
         """
         try:
             llm_providers_list = []
+            providers = {}
             
-            with open(os.path.expanduser(ModelLoader.llm_conf_filename), 'r') as f:
-                config = yaml.load(f, Loader=yaml.FullLoader)
-            
-            providers = config
+            try:
+                # console.log(f"Loading configuration models from {ModelLoader.llm_conf_filename}")
+                with open(os.path.expanduser(ModelLoader.llm_conf_filename), 'r') as f:
+                        if f is None:
+                            # console.log(f"Error loading {ModelLoader.llm_conf_filename} > file not found")
+                            raise Exception(f"{ModelLoader.llm_conf_filename} > file not found")
+                        config = yaml.load(f, Loader=yaml.FullLoader)
+                        if config is None:
+                            # console.log(f"Error loading {ModelLoader.llm_conf_filename} > file is empty")
+                            raise Exception(f"{ModelLoader.llm_conf_filename} > file is empty")
+                providers = config
+            except Exception as e:
+                console.log(f"Error loading {ModelLoader.llm_conf_filename} > {e}")
+                raise Exception(f"Error loading {ModelLoader.llm_conf_filename} > {e}")
 
             for provider_name, conf in providers.items():
                 for model_name in conf:
@@ -62,7 +73,7 @@ class ModelLoader:
             
             # print the list of model names in the llm_providers_list
             model_names = [provider['model_name'] for provider in llm_providers_list]
-            console.log(f"[dim]Models: {model_names} found in {ModelLoader.llm_conf_filename}[/dim]")
+            console.log(f"[dim]{model_names} found in {ModelLoader.llm_conf_filename}[/dim]")
 
             return llm_providers_list
 

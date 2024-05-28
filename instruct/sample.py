@@ -55,8 +55,7 @@ def generate_sample_values(filepath, write_to_file=False, model=None, console=No
         return sample_values
     
     except Exception as e:
-        logging.error(f"Error generating sample values > 👀 possible cause: model to generate sample values not available in `models.yaml`\n {e}")
-        return
+        raise ValueError(f"{e}")
 
 
     
