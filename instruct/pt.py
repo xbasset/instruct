@@ -4,8 +4,13 @@ import re
 from instruct.llm_engine.model import Model
 import logging
 
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.text import Text
+
 logging.basicConfig(level=logging.ERROR)
 
+console = Console()
 
 class PT:
     """
@@ -32,13 +37,14 @@ class PT:
         try:
             from instruct.llm_engine.providers.model_loader import ModelLoader
             self.available_models, _ = ModelLoader().providers
+            console.print(f"[dim]available models: {self.available_models}[/dim]")
         except Exception as e:
             logging.debug(
                 f"{self.filepath} > available_models loading: {e}")
             self.available_models = None
 
         if forced_model is not None and self.available_models is not None:
-            print(forced_model)
+            console.print(f"forced model: {forced_model}")
             for provider in self.available_models:
                 if provider['model_name'] == forced_model:
                     self.forced_model: Model = provider['provider']

@@ -11,12 +11,18 @@ import logging
 import os
 import yaml
 
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.text import Text
+
 logging.basicConfig(level=logging.ERROR)
 
+console = Console()
 
 class ModelLoader:
-    llm_conf_filename = "models.yaml"
+    llm_conf_filename = "~/.instruct/models.yaml"
     _instance = None
+    _initialized = False
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -25,7 +31,9 @@ class ModelLoader:
         return cls._instance
 
     def __init__(self):
-        self.providers = self._get_providers()
+        if not self._initialized:
+            self.providers = self._get_providers()
+            self._initialized = True
 
     def _get_providers(self):
         """
@@ -35,7 +43,7 @@ class ModelLoader:
         try:
             llm_providers_list = []
             
-            with open(ModelLoader.llm_conf_filename, 'r') as f:
+            with open(os.path.expanduser(ModelLoader.llm_conf_filename), 'r') as f:
                 config = yaml.load(f, Loader=yaml.FullLoader)
             
             providers = config
@@ -51,6 +59,10 @@ class ModelLoader:
                         "config": conf
                     }
                     llm_providers_list.append(provider_conf)
+            
+            # print the list of model names in the llm_providers_list
+            model_names = [provider['model_name'] for provider in llm_providers_list]
+            console.log(f"[dim]Models: {model_names} found in {ModelLoader.llm_conf_filename}[/dim]")
 
             return llm_providers_list
 
@@ -126,34 +138,3 @@ class ModelLoader:
             logging.error(f"🔴: ERROR: ModelLoader _build_provider() >> {e}")
             return None
 
-
-
-    def _get_providers_by_model(self, model):
-        """
-        Return a list of providers that support the given model.
-        The providers are encoded in the sections of the config file as the following format <provider>/<model>
-        """
-        conf_file = os.path.join(os.path.dirname(
-            __file__), ModelLoader.llm_conf_filename)
-        config = configparser.ConfigParser()
-        config.read(conf_file)
-        providers = []
-        for section in config.sections():
-            provider, model_name = section.split('/')
-            if model_name == model:
-                providers.append(provider)
-        return providers
-
-    def _get_all_models(self):
-        """
-        Return a list of all models in the config file.
-        """
-        conf_file = os.path.join(os.path.dirname(
-            __file__), ModelLoader.llm_conf_filename)
-        config = configparser.ConfigParser()
-        config.read(conf_file)
-        models = []
-        for section in config.sections():
-            provider, model_name = section.split('/')
-            models.append(model_name)
-        return set(models)
