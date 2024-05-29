@@ -1,10 +1,7 @@
-# post_install.py
-import os
 from pathlib import Path
 
 from rich.console import Console
 from rich.markdown import Markdown
-from rich.text import Text
 
 console = Console()
 
