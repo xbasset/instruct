@@ -1,177 +1,61 @@
-# Prompt Template (PT) File Format
+# Prompt Templating for Large Language Models Querying
 
-## Introduction
+`pt` is a Python library for developers to write rich prompts, test them and iterate faster on prompt <> model fit.
 
-This document introduces the Prompt Template (`.pt`) file format, a new standard designed to streamline and enhance the process of generating inputs for large language models (LLMs) within development workflows. The `.pt` format is a composition of jinja2 templating, HTML-like custom tagging for document formatting, and unstructured pseudo-code, enabling a flexible, powerful approach to crafting LLM prompts.
+> `We don't know what we don't know.` ... GitHub Copilot suggested to complete with: `but we can ask the right questions to find out.`
 
-## Key Principles
-
-1. Prompting is coding: jinja2 templating and pseudo-code for dynamic, complex prompts.
-2. Divide and conquer: unified prompting library for easy multi-LLM architecture strategy.
-3. Token poor: reduce the token size of the prompt to optimize the LLM input.
-
-## Motivation
-
-As our reliance on LLMs increases, the complexity and variety of prompts we need to generate have grown. Traditional methods of prompt creation often involve a cumbersome, error-prone process of manually editing and formatting text, lacking standardization and efficiency. The `.pt` format aims to address these challenges by providing:
-
-- **Standardization:** A unified file format allows for consistent prompt creation across different projects and teams.
-- **Efficiency:** The use of jinja2 templating and custom tags streamlines the process of generating dynamic, complex prompts.
-- **Flexibility:** Support for unstructured pseudo-code and custom tags ensures that developers can express a wide range of logic and formatting requirements.
-- **Version Control:** A dash bang style header in each `.pt` file specifies the LLM model version, author, and additional metadata, facilitating better management and compatibility of prompt templates over time.
-
-## `.pt` File Format Specification
-
-### Header
-
-The `.pt` file begins with a dash bang style header that includes essential metadata:
-
-``` bash
-#! gpt4-turbo/2023-03-15-preview
-#! gpt-4-turbo-preview
-```
-
-### Body
-
-The body of the `.pt` file contains a mix of jinja2 templates, custom HTML-like tags, and pseudo-code:
+The goal of this library is to provide a simple way to generate prompts for querying LLMs.
 
 
-```html
-This is the output I expect from you:
-<title>Hello, {{ name }}! This is a sample template.</title>    
-<content><if not all informations required display a special message, otherwise do something></content>
+## Why?
 
-```
+We want to give developers the tools to explore the capabilities of open-source LLMs from the perspective of querying them with well-crafted instructions, before considering fine-tuning.
 
-## Advanced Templating Techniques
+We've seen performance improvements using the same model (ReACT, CoT, ToT, ...) from different prompting techniques and we want to build a tool that's useful for developers to explore these techniques even further.
 
-To accommodate the unique requirements and capabilities of different LLM models within a single PT file, advanced templating techniques are employed. This approach allows developers to specify model-specific prompts and logic, ensuring optimal interaction with each model's unique interpretation and response characteristics.
+Common frameworks like LangChain and LlamaIndex are great for building applications on top of LLMs, but they hide the richness of prompting strategies. This is where we want to focus.
 
-### Example of Model-Specific Templating
+Here's the big motivation: make open-source models production-ready for complex LLM-based applications without fine-tuning.
 
-Consider a scenario where different models, such as `mistral-medium`, `gpt-4-turbo`, and `mistral-large`, require tailored prompts to achieve the same task. The `.pt` file can contain directives (shebangs) and conditional templating to customize the prompt for each model:
+Gigantic models like GPT-4 generalize very well. Too well, maybe. They make developers lazy. It's too easy prompting badly a model that performs well, rather than thinking on smart approaches to query less RLHFed LLMs.
 
-```plaintext
-#! mistral:instruct
-#! mistral-medium
-#! gpt4-turbo/2023-03-15-preview
-#! gpt-4-turbo-preview
-#! mistral-large
+And that's a fact: less powerful models, i.e. open-weights / open-source models, tend to react less well to low-quality prompts and require more specific instructions.
 
-YOUR CONTEXT
-{{some_knowledge}}
+If we want to query open-source LLMs and build applications out of them, we need a toolbox for developers to iterate, find, and evaluate the right instructions.
 
-GLOBAL CONTEXT
-{{global_context}}
-
-USER NAME
-{{username}}
-
-{% if user_company_knowledge %}USER'S COMPANY KNOWLEDGE
-{{user_company_knowledge}}{% endif %}
-
-Here is the task achieved by your user.
--------
-TASK TO ACCOMPLISH
-{{task_name}}: {{task_definition}}
-
-USER INPUTS
-{{ user_task_inputs | tojson(indent=4) }}
-
-{% if user_messages_conversation %}CONVERSATION
-{{ user_messages_conversation }}{% endif %}
--------
-
-{# fewshot for small models like mistral7b, i.e. mistral:instruct with ollama #}
-{% if model in ["mistral:instruct"] %}
-EXAMPLES OF GOOD EXECUTIONS OF THE TASK SUMMARIZATION:
-
-EXAMPLE 1:
-------
-TASK TO ACCOMPLISH
-structure_ideas_into_doc: The user needs assistance to turn ideas into a structured written doc
-
-USER INPUTS:
-pr\\u00e9pare une note de musique
-
-TASK RESULT:
-<title>Structuration d'une Note de Musique</title>
-<summary>Assistance fournie pour transformer des id\u00e9es en un document structur\u00e9. Le sujet principal \u00e9tait la pr\u00e9paration d'une note de musique. Le processus a impliqu\u00e9 la transcription et l'organisation des id\u00e9es fournies.</summary>
-------
-{% endif %}
-
-Give a title to this task execution so that the user can remember what the task was about. Give important information in the title such as names, subjects...
-Make a summary of this task execution so that the user can remember what the task was about.
-Summary is addressed to the user. No need to call them.
-10 words max for the title and 3 sentences max for the summary.
-Format:
-<title>TITLE</title>
-<summary>SUMMARY</summary>
-
-Use the same language as the user.
-No talk, just title and summary.
-```
-
-This example showcases how to define complex logic and conditionally include content based on the model being used, offering unparalleled flexibility in crafting prompts for diverse LLMs.
+That's where Prompt Templating comes in.
 
 
-## PT Workflow
+## Use cases
 
-Developers create `.pt` files following the format specification. The runtime sequence involves:
+- Get out of gigantic models – like GPT4 – dependency: use large open-source models with model-specific instructions
+- Implement small models with a model-specific instruction-based strategy
+- Prepare datasets for fine-tuning with model-specific instructions
 
-```mermaid
-graph LR
-    A[Cleaning\nDashbang] --> B[Jinja2\nResolution]
-    B --> C[Generate\nLLM Input]
-    C --> D["(soon) Compression"]
-```
+## Principles
 
-1. **Cleaning Dashbang:** The header is cleaned from the processing input to the LLM.
-2. **Jinja2 Resolution:** Templates are processed to substitute variables and expressions with actual values.
-3. **Generate LLM Input:** The cleaned, resolved template serves as the input for the appropriate LLM.
-4. **(soon) Compression:** Optimize the LLM input with compression algorithms to reduce the token size – this is optional and depends on the LLM model & tokenizer.
+- Treat LLMs as prompt instructions interpreters
+- one single place for the logic of each "instruction" whatever the model
+- each model respond differently to prompts
+- model-specific instructions generated by templating
+- templating is to prompt what variables are to code
+- model selection at runtime has to be developer-driven and self-ported
 
-## Example
+## Credit & Inspiration
 
-!!! info "file translation.pt"
-    ```
-    #! gpt4-turbo/2023-03-15-preview
-#! gpt-4-turbo-preview
-    #! mistral-large
+`Prompting` is a new concept that has been introduced as a way to query Large Language Models.
 
-    Translate this text to {{language}}:
-    <text_start>
-    {{text}}
-    <text_end>
-    If text is already in {{language}}, return it as is.
-    No talk, just translation.
-    Do not include tags in response.
+In fact "prompting" was coined after the first release of "instruct" versions of GPT models.
+
+With this "instruction-based" fine-tuning strategy, the LLM is more prone to answer queries that looks like instructions, thus the term "prompting".
 
 
-    ```
+This package is taking inspiration from the Mojodex Prompt Template library, which has been designed and built as a way to handle the complex prompting strategy.
+This effort is a way to make this tool independent, simple and easy to use for developers to explore LLMs querying.
 
-!!! code Usage
-    ```python
-    >>> pt = PT('translation.pt', text='hello', language='english')
-    >>> print(pt)
-    PT: translation.pt
-    
-    >>> print(pt.prompt)
-    Translate this text to english:
-    <text_start>
-    hello
-    <text_end>
-    If text is already in english, return it as is.
-    No talk, just translation.
-    Do not include tags in response.
-    
-    
-    
-    >>> print(pt.dashbangs)
-    [{'model_name': 'gpt-4-turbo', 'version': '2023-03-15-preview'}, {'model_name': 'mistral-large', 'version': 'latest'}]
-    
-    >>> print(pt.models)
-    ['gpt-4-turbo', 'mistral-large']
-    
-    >>> print(pt.tags) 
-    ['<text_start>', '<text_end>']   
-    ```
+## TODO
+
+
+- fix --model flag in run command
+- create a getting started and tutorial
+- create a README à la https://github.com/darold/pgbadger/blob/master/doc/pgBadger.pod
