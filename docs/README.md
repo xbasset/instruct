@@ -59,3 +59,4 @@ This effort is a way to make this tool independent, simple and easy to use for d
 - fix --model flag in run command
 - create a getting started and tutorial
 - create a README à la https://github.com/darold/pgbadger/blob/master/doc/pgBadger.pod
+- save each calls in ./instruct/dataset pair query<>answer + instruct model used [optional feedback, use case] for further use
