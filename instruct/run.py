@@ -1,5 +1,6 @@
 from instruct.pt import PT
 from instruct.sample import generate_sample_values
+from instruct.data_entry import DataEntry
 import yaml
 from rich.console import Console
 from rich.markdown import Markdown
@@ -12,7 +13,7 @@ import time
 console = Console()
 
 
-def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=None):
+def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=None, ask_feedback=False):
     try:
         console.log(
             f"Running: [bold green]{filepath}[/bold green]")
@@ -54,6 +55,19 @@ def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=
         performance_text = Text(
             f"Total: {end_time_run - start_time:.2f}s (Values: {end_time_values - start_time:.2f}s, Run:{end_time_run - end_time_values:.2f}s)", style="italic dim")
         console.log(performance_text)
+
+        if ask_feedback:
+            feedback = console.input("Feedback (press Enter if satisfied): ")
+            if not feedback:
+                feedback = "Default feedback: Satisfied with the result."
+        else:
+            feedback = None
+
+        # Save the data entry
+        data_entry = DataEntry(filepath, query=pt.prompt, response=result,
+                               evaluation=feedback, model=pt.matching_model.name)
+        data_entry.save()
+
 
     except Exception as e:
         console.log(f"[bold red]Error running {filepath} > {e}[/bold red]")
