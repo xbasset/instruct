@@ -1,5 +1,5 @@
-from instruct.pt import PT
+from instruct.instruct import Instruct
 
-pt = PT("examples/course_material/hello_world.pt", name="Alice")
-result = pt.run(temperature=0.7, max_tokens=50)
+pt = Instruct("examples/course_material/hello_world.instruct", name="Alice")
+result = instruct.run(temperature=0.7, max_tokens=50)
 print(result)

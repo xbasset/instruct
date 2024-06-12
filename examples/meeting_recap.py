@@ -1,4 +1,4 @@
-from instruct.pt import PT
+from instruct.instruct import Instruct
 import logging
 import os
 from rich.console import Console
@@ -18,11 +18,11 @@ for file in list_files:
 
 
 def run_meeting_recap(notes: str, verbose: bool = True):
-    pt = PT("examples/instructions/meeting_recap.pt",
+    instruct = Instruct("examples/instructions/meeting_recap.instruct",
             notes=notes)
-    meeting_recap_run = pt.run(temperature=0.0, max_tokens=1000)
+    meeting_recap_run = instruct.run(temperature=0.0, max_tokens=1000)
     
-    # meeting_recap.pt run output can be either <meeting_recap> tag or <question_to_ask> tag
+    # meeting_recap.instruct run output can be either <meeting_recap> tag or <question_to_ask> tag
     # As the models tend to talk more, we parse the output to extract only the tags
     try:
         meeting_recap, question_to_ask, scratchpad = None, None, None
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     iterations = 10
     success = 0
     # eval the last example `iterations` times
-    for i in track(range(iterations), description="Evaluating meeting_recap.pt/mistral with missing date information"):
+    for i in track(range(iterations), description="Evaluating meeting_recap.instruct/mistral with missing date information"):
         meeting_recap, question_to_ask, scratchpad = run_meeting_recap(examples[-1], verbose=False)
         if question_to_ask and not meeting_recap:
             success += 1

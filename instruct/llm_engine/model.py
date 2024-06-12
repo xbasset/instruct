@@ -45,12 +45,12 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def invoke_from_pt(self, pt, temperature, max_tokens):
+    def invoke_from_pt(self, instruct, temperature, max_tokens):
         """
-        Perform a Model chat completion using the provided PT.
+        Perform a Model chat completion using the provided Instruct.
 
         Args:
-            pt (PT): The PT object.
+            instruct (Instruct): The Instruct object.
             temperature (float): Temperature parameter for generating responses.
             max_tokens (int): Maximum number of tokens in the generated response.
 

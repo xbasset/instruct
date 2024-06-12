@@ -12,22 +12,22 @@ logging.basicConfig(level=logging.ERROR)
 
 console = Console()
 
-class PT:
+class Instruct:
     """
-    The PT class represents a Prompt Template.
-    See the Prompt Template (PT) documentation for more details.
+    The Instruct class is in charge of all the operations of the `instruct` principles.
+    See the Instruct(`.instruct`) documentation for more details.
 
     Attributes:
-        filepath (str): The filepath of the PT file.
-        shebangs (list): A list of shebangs found in the PT file.
-        template (jinja2.Template): The Jinja2 template object representing the PT file.
+        filepath (str): The filepath of the Instruct file.
+        shebangs (list): A list of shebangs found in the Instruct file.
+        template (jinja2.Template): The Jinja2 template object representing the Instruct file.
         models (list): Returns a list of model names extracted from the shebangs.
         tags (list): Returns a list of tags extracted from the template.
         template_values (list): Returns a list of jinja2 values extracted from the template.
         prompt (str): Returns the rendered prompt using the provided keyword arguments.
 
     Methods:
-        _parse_file(): Parses the PT file and extracts shebangs and template.
+        _parse_file(): Parses the Instruct file and extracts shebangs and template.
         _perform_templating(**kwargs): Performs templating using the provided keyword arguments.
     """
 
@@ -133,7 +133,7 @@ class PT:
 
     def _parse_file(self):
         """
-        Parses the PT file and extracts shebangs and template.
+        Parses the Instruct file and extracts shebangs and template.
         """
         try:
             with open(self.filepath, 'r') as file:
@@ -177,11 +177,11 @@ class PT:
         Returns:
             str: The rendered template.
         """
-        # if one of the args is of type PT, call its prompt method
+        # if one of the args is of type Instruct, call its prompt method
         for k, v in kwargs.items():
-            if isinstance(v, PT):
+            if isinstance(v, Instruct):
                 kwargs[k] = v.prompt
-                # also retrieve the models from the PT and choose the common model with the current PT
+                # also retrieve the models from the Instruct and choose the common model with the current Instruct
                 self.models = list(set(self.models).intersection(v.models))
 
         try:
@@ -194,12 +194,12 @@ class PT:
 
     def __str__(self):
         """
-        Returns a string representation of the PT object.
+        Returns a string representation of the Instruct object.
 
         Returns:
-            str: A string representation of the PT object.
+            str: A string representation of the Instruct object.
         """
-        return f"PT: {self.filepath}"
+        return f"Instruct: {self.filepath}"
 
     def run(self, **kwargs):
         """
@@ -224,11 +224,11 @@ class PT:
                 raise Exception(f"""
 {self} > No matching provider <> model found:
 providers: {self.available_models}
-PT's compatibility list: {self.models}
+Instruct's compatibility list: {self.models}
 To fix the problem:
 1. Check the providers in the models.conf file.
-2. Check the PT file's shebangs for compatibility with the providers.""")
+2. Check the Instruct file's shebangs for compatibility with the providers.""")
 
         except Exception as e:
-            logging.error(f"Error running PT: {self} > {e}")
+            logging.error(f"Error running Instruct: {self} > {e}")
             return None

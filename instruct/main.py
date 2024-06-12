@@ -19,7 +19,7 @@ install()
 def cli():
 
     parser = argparse.ArgumentParser(
-        description="Instruct CLI to run, evaluate LLM instructions and build datasets.")
+        description="Instruct CLI to run, evaluate instructions and build datasets.")
     subparsers = parser.add_subparsers(dest="command")
     run_parser = subparsers.add_parser("run")
     run_parser.add_argument("file", type=str)

@@ -2,7 +2,7 @@
 
 import os
 from instruct.llm_engine.model import Model
-from instruct.pt import PT
+from instruct.instruct import Instruct
 
 import logging
 
@@ -81,15 +81,15 @@ class GroqLLM(Model):
             raise Exception(
                 f"🔴 Error in GroqLLM: {e} - model: {self.model}")
 
-    def invoke_from_pt(self, pt: PT, temperature, max_tokens, n_responses=1,
+    def invoke_from_pt(self, instruct: Instruct, temperature, max_tokens, n_responses=1,
                         frequency_penalty=0, presence_penalty=0, stream=False, stream_callback=None, json_format=False):
         try:
 
-            if self.model not in pt.models:
+            if self.model not in instruct.models:
                 logging.warning(
                     f"{pt} does not contain model: {self.model} in its dashbangs")
 
-            messages = [{"role": "user", "content": pt.prompt}]
+            messages = [{"role": "user", "content": instruct.prompt}]
             responses = self.invoke(messages, temperature, max_tokens, n_responses=n_responses,
                                     frequency_penalty=frequency_penalty, presence_penalty=presence_penalty, stream=stream, stream_callback=stream_callback, json_format=json_format)
             return responses

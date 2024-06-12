@@ -1,10 +1,10 @@
-from instruct.pt import PT
+from instruct.instruct import Instruct
 import logging
 
-pt = PT("examples/instructions/translation.pt",
+pt = Instruct("examples/instructions/translation.instruct",
         text="Bonjour tout le monde !", language="english")
 
 
-translation = pt.run(temperature=0.7, max_tokens=200)
+translation = instruct.run(temperature=0.7, max_tokens=200)
 
 print(translation)

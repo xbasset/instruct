@@ -1,4 +1,4 @@
-from instruct.pt import PT
+from instruct.instruct import Instruct
 import logging
 import os
 from rich.console import Console
@@ -21,10 +21,10 @@ for file in list_files:
 def run_rephrase(context: str, sentence: str, instructions: str, verbose: bool = False, model: str = None):
     
     try:
-        pt = PT("examples/instructions/rephrase.pt", context=context,
+        instruct = Instruct("examples/instructions/rephrase.instruct", context=context,
             sentence=sentence, instructions=instructions, forced_model=model)
 
-        rephrase = pt.run(temperature=0.0, max_tokens=200)
+        rephrase = instruct.run(temperature=0.0, max_tokens=200)
 
         
         if verbose:
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     iterations = 1
     success = 0
     # eval the last example `iterations` times
-    for i in track(range(iterations), description=f"Evaluating meeting_recap.pt/{model} with missing date information"):
+    for i in track(range(iterations), description=f"Evaluating meeting_recap.instruct/{model} with missing date information"):
         for example in examples:
             example_values = yaml.load(example.strip(), Loader=yaml.FullLoader)
             result = run_rephrase(example_values["context"], example_values["sentence"], example_values["instructions"], verbose=True, model=model)

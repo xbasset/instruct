@@ -38,7 +38,7 @@ pip install instruct
 
 Here's a quick example to get you started with Instruct:
 
-1. **Create an Instruction File** (`hello_world.pt`):
+1. **Create an Instruction File** (`hello_world.instruct`):
 
     ```plaintext
     #! gpt-3.5-turbo
@@ -50,10 +50,10 @@ Here's a quick example to get you started with Instruct:
 2. **Run the Instruction**:
 
     ```python
-    from instruct.pt import PT
+    from instruct.instruct import Instruct
 
-    pt = PT("hello_world.pt", name="Alice")
-    result = pt.run(temperature=0.7, max_tokens=50)
+    instruct = Instruct("hello_world.instruct", name="Alice")
+    result = instruct.run(temperature=0.7, max_tokens=50)
     print(result)
     ```
 
@@ -61,7 +61,7 @@ Here's a quick example to get you started with Instruct:
 
 ### Creating Instructions
 
-Instructions are written in `.pt` – for Prompt Template – files. These files contain:
+Instructions are written in `.instruct` files. These files typically contain:
 
 - **Shebangs**: Indicate the models on which the instruction should run.
 - **Context**: The purpose and objective of the instruction.
@@ -69,7 +69,7 @@ Instructions are written in `.pt` – for Prompt Template – files. These files
 - **Data**: Variables used in the instruction, similar to function parameters.
 - **Expected Format**: Description of the expected response format.
 
-Example of an instruction file (`hello_world.pt`):
+Example of an instruction file (`hello_world.instruct`):
 
 ```shell
 #! gpt-3.5-turbo
@@ -82,26 +82,26 @@ Go!
 
 ### Running Instructions
 
-To run an instruction, use the `PT` class:
+To run an instruction, use the `Instruct` class:
 
 #### Python code
 ```python
-from instruct.pt import PT
+from instruct.instruct import Instruct
 
-pt = PT("hello_world.pt", name="Alice")
-result = pt.run(temperature=0.7, max_tokens=50)
+pt = Instruct("hello_world.instruct", name="Alice")
+result = instruct.run(temperature=0.7, max_tokens=50)
 print(result)
 ```
 
 #### CLI
 Basic
 ```shell
-instruct run examples/hello_world.pt
+instruct run examples/hello_world.instruct
 ```
 
 Advanced:
 ```shell
-instruct run example/translate.pt --temperature 2.0 --max_token 42 --input ~/input_translation.json --output ~/output.txt
+instruct run example/translate.instruct --temperature 2.0 --max_token 42 --input ~/input_translation.json --output ~/output.txt
 ```
 
 Help:
@@ -129,7 +129,7 @@ azure:
     deployment_id: "your_azure_deployment_id"
 ```
 
-Place this file in `~/.pt/models.yaml`.
+Place this file in `~/.instruct/models.yaml`.
 
 ## Examples
 

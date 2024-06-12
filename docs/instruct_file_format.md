@@ -1,8 +1,8 @@
-# Prompt Template (PT) File Format
+# Instruct (`.instruct`) File Format
 
 ## Introduction
 
-This document introduces the Prompt Template (`.pt`) file format, a new standard designed to streamline and enhance the process of generating inputs for large language models (LLMs) within development workflows. The `.pt` format is a composition of jinja2 templating, HTML-like custom tagging for document formatting, and unstructured pseudo-code, enabling a flexible, powerful approach to crafting LLM prompts.
+This document introduces the Instruct (`.instruct`) file format, a new standard designed to streamline and enhance the process of generating inputs for large language models (LLMs) within development workflows. The `.instruct` format is a composition of jinja2 templating, HTML-like custom tagging for document formatting, and unstructured pseudo-code, enabling a flexible, powerful approach to crafting LLM prompts.
 
 ## Key Principles
 
@@ -12,18 +12,18 @@ This document introduces the Prompt Template (`.pt`) file format, a new standard
 
 ## Motivation
 
-As our reliance on LLMs increases, the complexity and variety of prompts we need to generate have grown. Traditional methods of prompt creation often involve a cumbersome, error-prone process of manually editing and formatting text, lacking standardization and efficiency. The `.pt` format aims to address these challenges by providing:
+As our reliance on LLMs increases, the complexity and variety of prompts we need to generate have grown. Traditional methods of prompt creation often involve a cumbersome, error-prone process of manually editing and formatting text, lacking standardization and efficiency. The `.instruct` format aims to address these challenges by providing:
 
 - **Standardization:** A unified file format allows for consistent prompt creation across different projects and teams.
 - **Efficiency:** The use of jinja2 templating and custom tags streamlines the process of generating dynamic, complex prompts.
 - **Flexibility:** Support for unstructured pseudo-code and custom tags ensures that developers can express a wide range of logic and formatting requirements.
-- **Version Control:** A dash bang style header in each `.pt` file specifies the LLM model version, author, and additional metadata, facilitating better management and compatibility of prompt templates over time.
+- **Version Control:** A dash bang style header in each `.instruct` file specifies the LLM model version, author, and additional metadata, facilitating better management and compatibility of prompt templates over time.
 
-## `.pt` File Format Specification
+## `.instruct` File Format Specification
 
 ### Header
 
-The `.pt` file begins with a dash bang style header that includes essential metadata:
+The `.instruct` file begins with a dash bang style header that includes essential metadata:
 
 ``` bash
 #! gpt4-turbo/2023-03-15-preview
@@ -32,7 +32,7 @@ The `.pt` file begins with a dash bang style header that includes essential meta
 
 ### Body
 
-The body of the `.pt` file contains a mix of jinja2 templates, custom HTML-like tags, and pseudo-code:
+The body of the `.instruct` file contains a mix of jinja2 templates, custom HTML-like tags, and pseudo-code:
 
 
 ```html
@@ -44,11 +44,11 @@ This is the output I expect from you:
 
 ## Advanced Templating Techniques
 
-To accommodate the unique requirements and capabilities of different LLM models within a single PT file, advanced templating techniques are employed. This approach allows developers to specify model-specific prompts and logic, ensuring optimal interaction with each model's unique interpretation and response characteristics.
+To accommodate the unique requirements and capabilities of different LLM models within a single Instruct file, advanced templating techniques are employed. This approach allows developers to specify model-specific prompts and logic, ensuring optimal interaction with each model's unique interpretation and response characteristics.
 
 ### Example of Model-Specific Templating
 
-Consider a scenario where different models, such as `mistral-medium`, `gpt-4-turbo`, and `mistral-large`, require tailored prompts to achieve the same task. The `.pt` file can contain directives (shebangs) and conditional templating to customize the prompt for each model:
+Consider a scenario where different models, such as `mistral-medium`, `gpt-4-turbo`, and `mistral-large`, require tailored prompts to achieve the same task. The `.instruct` file can contain directives (shebangs) and conditional templating to customize the prompt for each model:
 
 ```plaintext
 #! mistral:instruct
@@ -114,9 +114,9 @@ No talk, just title and summary.
 This example showcases how to define complex logic and conditionally include content based on the model being used, offering unparalleled flexibility in crafting prompts for diverse LLMs.
 
 
-## PT Workflow
+## Instruct Workflow
 
-Developers create `.pt` files following the format specification. The runtime sequence involves:
+Developers create `.instruct` files following the format specification. The runtime sequence involves:
 
 ```mermaid
 graph LR
@@ -132,7 +132,7 @@ graph LR
 
 ## Example
 
-!!! info "file translation.pt"
+!!! info "file translation.instruct"
     ```
     #! gpt4-turbo/2023-03-15-preview
 #! gpt-4-turbo-preview
@@ -151,11 +151,11 @@ graph LR
 
 !!! code Usage
     ```python
-    >>> pt = PT('translation.pt', text='hello', language='english')
-    >>> print(pt)
-    PT: translation.pt
+    >>> instruct = Instruct('translation.instruct', text='hello', language='english')
+    >>> print(instruct)
+    Instruct: translation.instruct
     
-    >>> print(pt.prompt)
+    >>> print(instruct.prompt)
     Translate this text to english:
     <text_start>
     hello
@@ -166,13 +166,13 @@ graph LR
     
     
     
-    >>> print(pt.dashbangs)
+    >>> print(instruct.dashbangs)
     [{'model_name': 'gpt-4-turbo', 'version': '2023-03-15-preview'}, {'model_name': 'mistral-large', 'version': 'latest'}]
     
-    >>> print(pt.models)
+    >>> print(instruct.models)
     ['gpt-4-turbo', 'mistral-large']
     
-    >>> print(pt.tags) 
+    >>> print(instruct.tags) 
     ['<text_start>', '<text_end>']   
     ```
 

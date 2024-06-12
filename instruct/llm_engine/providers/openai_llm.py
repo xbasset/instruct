@@ -9,7 +9,7 @@ from typing import List
 
 import os
 
-from instruct.pt import PT
+from instruct.instruct import Instruct
 
 
 class OpenAILLM(Model):
@@ -130,15 +130,15 @@ class OpenAILLM(Model):
         # [] is a legacy from the previous version that could return several completions. Need complete refacto to remove.
         return [assistant_response + " " + response]
 
-    def invoke_from_pt(self, pt: PT, temperature, max_tokens, frequency_penalty=0, presence_penalty=0,
+    def invoke_from_pt(self, instruct: Instruct, temperature, max_tokens, frequency_penalty=0, presence_penalty=0,
                         stream=False, stream_callback=None, **kwargs):
         try:
 
 
-            if self.name not in pt.models:
+            if self.name not in instruct.models:
                 logging.warning(
                     f"{pt} does not contain model: {self.name} in its dashbangs")
-            messages = [{"role": "user", "content": pt.prompt}]
+            messages = [{"role": "user", "content": instruct.prompt}]
             responses = self.recursive_invoke(messages, temperature, max_tokens,
                                               frequency_penalty=frequency_penalty, presence_penalty=presence_penalty,
                                               stream=stream, stream_callback=stream_callback,

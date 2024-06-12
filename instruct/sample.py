@@ -1,4 +1,4 @@
-from instruct.pt import PT
+from instruct.instruct import Instruct
 import logging
 import datetime
 import yaml
@@ -9,15 +9,15 @@ def write_output(filepath, output):
 
 def generate_sample_values(filepath, write_to_file=False, model=None, console=None):
     try:
-        pt = PT(filepath)
-        template_values = pt.template_values
+        instruct = Instruct(filepath)
+        template_values = instruct.template_values
         
         if len(template_values) == 0:
             # if no template values found in {filepath} just skip the generation
             return {}
 
         console.log(f"Generating sample values for {filepath}", f" with {model}" if model else "")
-        sample_values_generator = PT("src/instructions/generate_sample_values.pt", template=pt.raw_template, values=pt.template_values, forced_model=model)
+        sample_values_generator = Instruct("src/instructions/generate_sample_values.instruct", template=instruct.raw_template, values=instruct.template_values, forced_model=model)
         sample_values = sample_values_generator.run(temperature=0, max_tokens=1000)
         
         # parse the output to only keep the content of the "<output>"

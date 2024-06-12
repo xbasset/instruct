@@ -5,7 +5,7 @@ import tiktoken
 import logging
 from typing import List
 
-from instruct.pt import PT
+from instruct.instruct import Instruct
 
 
 class OpenAIVisionLLM(OpenAILLM):

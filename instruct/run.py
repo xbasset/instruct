@@ -1,4 +1,4 @@
-from instruct.pt import PT
+from instruct.instruct import Instruct
 from instruct.sample import generate_sample_values
 from instruct.data_entry import DataEntry
 import yaml
@@ -37,14 +37,14 @@ def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=
         
         
         # Run the prompt template with the given values
-        pt = PT(filepath, forced_model=model, **values)
-        console.log(f"[dim blue]Now running with: [/dim blue][bold green]{pt.matching_model.name}[/bold green][dim blue] with Temp.: {temperature}, {max_tokens} tokens max[/dim blue]")
-        result = pt.run(temperature=temperature, max_tokens=max_tokens)
+        instruct = Instruct(filepath, forced_model=model, **values)
+        console.log(f"[dim blue]Now running with: [/dim blue][bold green]{instruct.matching_model.name}[/bold green][dim blue] with Temp.: {temperature}, {max_tokens} tokens max[/dim blue]")
+        result = instruct.run(temperature=temperature, max_tokens=max_tokens)
         end_time_run = time.time()
 
         # Show the result
         console.print(
-            Markdown(f"# Result with **{pt.matching_model.name}** model:"))
+            Markdown(f"# Result with **{instruct.matching_model.name}** model:"))
         console.print(Markdown(f"```markdown\n{result}\n```"))
         
         if output and result:
@@ -64,8 +64,8 @@ def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=
             feedback = None
 
         # Save the data entry
-        data_entry = DataEntry(filepath, query=pt.prompt, response=result,
-                               evaluation=feedback, model=pt.matching_model.name)
+        data_entry = DataEntry(filepath, query=instruct.prompt, response=result,
+                               evaluation=feedback, model=instruct.matching_model.name)
         data_entry.save()
 
 

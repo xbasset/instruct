@@ -1,6 +1,7 @@
 # Prompt Templating for Large Language Models Querying
 
-`pt` is a Python library for developers to write rich prompts, test them and iterate faster on prompt <> model fit.
+`instruct` is a Python library for developers to carefully write rich prompts, test them and iterate faster on prompt <> model fit.
+It works best with the `vscode-instruct` extension
 
 > `We don't know what we don't know.` ... GitHub Copilot suggested to complete with: `but we can ask the right questions to find out.`
 
