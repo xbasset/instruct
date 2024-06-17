@@ -1,6 +1,10 @@
+![instruct_logo](/assets/instruct_logo.png)
+
  # Instruct
 
-`instruct` is a Python library designed to create, run, and evaluate instructions for Large Language Models (LLMs). It allows developers to craft rich instructions, execute them on various LLMs, and evaluate their robustness across different models.
+ Create, run, and evaluate elaborated instructions for Large Language Models (LLMs).
+
+`instruct` is a Python library designed for developers to craft rich instructions, execute them on various LLMs, and evaluate their robustness across different models.
 
 ## Table of Contents
 
@@ -22,40 +26,55 @@
 
 ## Features
 
-- **Create Instructions**: Write developer instructions to leverage the full potential of LLMs. Soon: VS Code Extension
-- **Run Instructions**: Execute instructions on different LLMs with simple configuration, or directly from CLI
+- **Create Rich Instructions**: Write developer-grade instructions to leverage the full potential of LLMs in the [VS Code Extension](https://github.com/xbasset/vscode-instruct)
+![Instruct VS Code Extension](/assets/vscode-instruct.png)
+
+- **Run Instructions**: Execute instructions on different LLMs with simple configuration from Python and directly your from CLI
+
+![alt text](/assets/instruct-cli.png)
+
 - **[SOON] Evaluate Instructions**: Perform statistical evaluations to ensure the robustness of instructions across multiple models.
 
 ## Installation
 
-To install Instruct, use pip:
+To install `Instruct` Python package, use pip:
 
 ```bash
 pip install instruct
 ```
 
+For the VS Code extension, follow this guide:
+https://github.com/xbasset/vscode-instruct
+
 ## Quick Start
 
 Here's a quick example to get you started with Instruct:
 
-1. **Create an Instruction File** (`hello_world.instruct`):
+1. **Create an Instruction File** (`quickstart.instruct`):
 
-    ```plaintext
-    #! gpt-3.5-turbo
-    #! gpt-4
+```plaintext
+#! gpt-3.5-turbo
+#! gpt-4
 
-    Hello, {{ name }}!
-    ```
+Hello, my name is {{ name }}!
+```
 
-2. **Run the Instruction**:
+2.1 **Run the Instruction from Python**:
 
-    ```python
-    from instruct.instruct import Instruct
+```python
+from instruct.instruct import Instruct
 
-    instruct = Instruct("hello_world.instruct", name="Alice")
-    result = instruct.run(temperature=0.7, max_tokens=50)
-    print(result)
-    ```
+instruct = Instruct("quickstart.instruct", name="Alice")
+result = instruct.run(temperature=0.7, max_tokens=50)
+print(result)
+```
+
+2.2 **Run from CLI**
+```shell
+echo "name: Alice" > quickstart.input
+instruct run quickstart.instruct --input quickstart.input
+```
+
 
 ## Usage
 
@@ -71,7 +90,7 @@ Instructions are written in `.instruct` files. These files typically contain:
 
 Example of an instruction file (`hello_world.instruct`):
 
-```shell
+```
 #! gpt-3.5-turbo
 #! gpt-4
 Your task is to say "Hello, World!" to {{ name }}! in a creative way. I mean... very creative way. Like the most creative way you can think of. 
