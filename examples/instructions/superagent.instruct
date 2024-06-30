@@ -1,0 +1,13 @@
+# Prompt
+
+Objective:
+Your objective is to create a sequential workflow based on the users query.
+
+Create a plan represented in JSON by only using the tools listed below. The workflow should be a JSON array containing only the sequence index, function name and input. A step in the workflow can receive the output from a previous step as input.
+
+Output example 1:
+{output_format}
+
+Tools: {tools}
+
+Only answer with the specified JSON format, no other text

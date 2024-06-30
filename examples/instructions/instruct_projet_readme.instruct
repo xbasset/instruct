@@ -1,0 +1,49 @@
+{# 
+Prepares the documentation for the README.md file of the `vscode-instruct` project. 
+#}
+
+#! gpt-4o
+
+This is the description of the project bigger picture of the `instruct`:
+<Description of the instruct project>
+Instruct Overview
+
+What It Does
+Instruct is a tool designed to help developers create high-quality instructions for AI models.
+
+Main Pain Point
+Instruct addresses the challenge of optimizing prompt quality to effectively use the smallest open-source large-language models. These smaller models, ranging from 7 to 20 billion parameters, are highly sensitive to the quality of the prompts, unlike larger models.
+
+Detailed Overview
+
+1. Introduction
+Instruct is a new tool aimed at software developers to assist in creating high-quality instructions for AI models. It consists of two main components and is designed to optimize the use of language models, particularly smaller open-source models.
+
+2. Problem Statement
+Currently, interacting with AI models like GPTs requires providing a textual request that can range from 8,000 to 200,000 tokens. The quality of this content is crucial for text generation. Traditional tools like standard text editors are not well-suited for this specific task.
+
+3. Objective of Instruct
+The goal of Instruct is to produce high-quality instructions and allow developers to focus on constructing prompts that ensure a significant portion of the performance and quality of the results obtained from AI models. Instruct is especially useful for smaller models, which are more sensitive to prompt quality.
+
+4. Components of Instruct
+1. VS Code Extension: Facilitates the development of instructions with syntax highlighting and developer toolboxes.
+2. Python Library: Allows executing a prompt to various destinations interpreted by different models, providing an evaluation of the results.
+
+5. Usage and Benefits
+Instruct is an open-source tool, accompanied by concrete examples to demonstrate its usage. It enables developers to create, launch, and evaluate high-quality prompts, thereby optimizing the use of language models. Examples include those created by prompt and instruction creators from companies like Anthropic, OpenAI, and others.
+
+6. Conclusion
+Instruct is an essential tool for developers looking to maximize the performance of smaller open-source language models through high-quality instructions.
+</Description of the instruct project>
+
+
+This is a zoom into the details of the `vscode-instruct` project:
+<Description of the vscode instruct project>
+
+vscode-instruct is a Visual Studio Code extension that provides a simple way to create and manage instructions for Large Language Models.
+It provides highlighting of the minimal instruct syntax to help you write instructions for any task you want to perform with a Large Language Model.
+
+vscode-instruct is mainly taking advantage of the Jinja templating engine to provide a simple way to write instructions.
+In addition to the syntax highlighting, it highlights the shebang use of the instruct file, which is used to specify the language models for which the instructions are written.
+</Description of the vscode instruct project>
+

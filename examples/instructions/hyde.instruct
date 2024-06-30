@@ -1,0 +1,15 @@
+#! gpt-4o
+
+
+Please write a passage to answer the question 
+Question: {question}
+Passage:"""
+sci_fact_template = """Please write a scientific paper passage to support/refute the claim 
+Claim: {question}
+Passage:"""  # noqa: E501
+fiqa_template = """Please write a financial article passage to answer the question
+Question: {question}
+Passage:"""
+trec_news_template = """Please write a news passage about the topic.
+Topic: {question}
+Passage:
