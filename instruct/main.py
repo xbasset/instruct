@@ -27,7 +27,7 @@ def cli():
     run_parser.add_argument("--output", type=str)
     run_parser.add_argument("--temperature", type=float, default=0.7)
     run_parser.add_argument("--max_tokens", type=int, default=1000)
-    run_parser.add_argument("--feedback", type=bool, default=False)
+    run_parser.add_argument("--feedback", type=bool, default=True)
     run_parser.add_argument("--model", type=str)
     sample_parser = subparsers.add_parser("sample")
     sample_parser.add_argument("file", type=str)
