@@ -23,7 +23,9 @@ def run(
     temperature: float = typer.Option(0.7, help="Temperature value for the model"),
     max_tokens: int = typer.Option(1000, help="Maximum number of tokens"),
     feedback: bool = typer.Option(True, help="Whether to ask for feedback"),
-    model: str = typer.Option(None, help="Model to use")
+    model: str = typer.Option(None, help="Model to use"),
+    interactivity: bool = typer.Option(True, help="Enable interactivity")
+
 ):
     from instruct.run import run as run_instruct
     run_instruct(
@@ -33,7 +35,10 @@ def run(
         temperature=temperature, 
         max_tokens=max_tokens, 
         model=model, 
-        ask_feedback=feedback
+        ask_feedback=feedback,
+        interactivity=interactivity
+
+        
     )
 
 @app.command()
