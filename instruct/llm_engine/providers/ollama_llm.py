@@ -4,6 +4,8 @@ import os
 from instruct.llm_engine.model import Model
 from instruct.instruct import Instruct
 
+import logging
+
 
 from ollama import Client
 

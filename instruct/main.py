@@ -1,58 +1,57 @@
-# cli execution
-import argparse
 import logging
+import typer
 from rich.traceback import install
 from rich.logging import RichHandler
 from rich import print
 
+# Setup logging and install Rich traceback for beautiful error reporting
 logging.basicConfig(
     level="ERROR",
     format="%(message)s",
     datefmt="[%X]",
     handlers=[RichHandler(rich_tracebacks=True)]
 )
-
-# Install Rich traceback globally to handle exceptions beautifully
 install()
 
+app = typer.Typer()
+
+@app.command()
+def run(
+    file: str,
+    input: str = typer.Option(None, help="Input file"),
+    output: str = typer.Option(None, help="Output file"),
+    temperature: float = typer.Option(0.7, help="Temperature value for the model"),
+    max_tokens: int = typer.Option(1000, help="Maximum number of tokens"),
+    feedback: bool = typer.Option(True, help="Whether to ask for feedback"),
+    model: str = typer.Option(None, help="Model to use")
+):
+    from instruct.run import run as run_instruct
+    run_instruct(
+        file, 
+        input=input, 
+        output=output, 
+        temperature=temperature, 
+        max_tokens=max_tokens, 
+        model=model, 
+        ask_feedback=feedback
+    )
+
+@app.command()
+def sample(
+    file: str,
+    output: str = typer.Option(None, help="Output file"),
+    model: str = typer.Option(None, help="Model to use")
+):
+    from instruct.sample import generate_sample_values, write_output
+    if output:
+        values = generate_sample_values(file, write_to_file=output, model=model)
+        print(values)
+    else:
+        values = generate_sample_values(file, model=model)
+        print(values)
 
 def cli():
-
-    parser = argparse.ArgumentParser(
-        description="Instruct CLI to run, evaluate instructions and build datasets.")
-    subparsers = parser.add_subparsers(dest="command")
-    run_parser = subparsers.add_parser("run")
-    run_parser.add_argument("file", type=str)
-    run_parser.add_argument("--input", type=str)
-    run_parser.add_argument("--output", type=str)
-    run_parser.add_argument("--temperature", type=float, default=0.7)
-    run_parser.add_argument("--max_tokens", type=int, default=1000)
-    run_parser.add_argument("--feedback", type=bool, default=True)
-    run_parser.add_argument("--model", type=str)
-    sample_parser = subparsers.add_parser("sample")
-    sample_parser.add_argument("file", type=str)
-    sample_parser.add_argument("--output", type=str)
-    sample_parser.add_argument("--model", type=str)
-    args = parser.parse_args()
-
-    if args.command == "run":
-        from instruct.run import run
-        run(args.file, input=args.input if args.input else None, output=args.output if args.output else None , temperature=args.temperature, max_tokens=args.max_tokens, model=args.model, ask_feedback=args.feedback)
-
-    elif args.command == "sample":
-        if args.output:
-            from instruct.sample import generate_sample_values, write_output
-            values = generate_sample_values(
-                args.file, write_to_file=args.output, model=args.model)
-            print(values)
-        else:
-            from instruct.sample import generate_sample_values
-            values = generate_sample_values(args.file, model=args.model)
-            print(values)
-            
-    else:
-        parser.print_help()
-
+    app()
 
 if __name__ == "__main__":
-    cli()
+    app()
