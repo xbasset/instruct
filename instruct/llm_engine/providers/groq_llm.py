@@ -13,15 +13,15 @@ class GroqLLM(Model):
     def __init__(self, groq_conf):
 
         try:
-            self._name = groq_conf["model_name"]
-            self.model = groq_conf.get(
-                "model") if groq_conf.get("model") else None
+            self._name = groq_conf["model"]
+            model_conf = groq_conf.get(self._name)
+            self.model = self._name
 
             if self.model is None:
                 raise Exception(
-                    f"🔴 model not set in models conf: {groq_conf}")
+                    f"🔴 model not set in models conf: {model_conf}")
 
-            self.client = Groq(api_key=groq_conf["api_key"])
+            self.client = Groq(api_key=model_conf["api_key"])
 
         except Exception as e:
             raise Exception(

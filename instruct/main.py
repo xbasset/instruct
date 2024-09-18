@@ -6,7 +6,7 @@ from rich import print
 
 # Setup logging and install Rich traceback for beautiful error reporting
 logging.basicConfig(
-    level="ERROR",
+    level="INFO",
     format="%(message)s",
     datefmt="[%X]",
     handlers=[RichHandler(rich_tracebacks=True)]

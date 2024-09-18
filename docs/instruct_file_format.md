@@ -167,7 +167,7 @@ graph LR
     
     
     >>> print(instruct.dashbangs)
-    [{'model_name': 'gpt-4-turbo', 'version': '2023-03-15-preview'}, {'model_name': 'mistral-large', 'version': 'latest'}]
+    [{'model': 'gpt-4-turbo', 'version': '2023-03-15-preview'}, {'model': 'mistral-large', 'version': 'latest'}]
     
     >>> print(instruct.models)
     ['gpt-4-turbo', 'mistral-large']

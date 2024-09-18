@@ -15,17 +15,17 @@ class OllamaLLM(Model):
     def __init__(self, ollama_conf):
 
         try:
-            self._name = ollama_conf["model_name"]
+            self._name = ollama_conf["model"]
             self.model = ollama_conf.get(
                 "model") if ollama_conf.get("model") else None
-            self.endpoint = ollama_conf.get("endpoint") if ollama_conf.get(
+            self.endpoint = ollama_conf[self.model].get("endpoint") if ollama_conf[self.model].get(
                 "endpoint") else None
 
             if self.endpoint is None or self.model is None:
                 raise Exception(
                     f"🔴 model and endpoint not set in models conf: {ollama_conf}")
 
-            self.client = Client(host=ollama_conf["endpoint"])
+            self.client = Client(host=self.endpoint)
 
         except Exception as e:
             raise Exception(

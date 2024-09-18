@@ -1,5 +1,4 @@
-from mistralai.models.chat_completion import ChatMessage
-from mistralai.client import MistralClient
+from mistralai import Mistral
 import logging
 import os
 from instruct.llm_engine.model import Model
@@ -13,18 +12,20 @@ class MistralAILLM(Model):
     def __init__(self, mistral_conf):
 
         try:
-            self._name = mistral_conf["model_name"]
-            api_key = mistral_conf["api_key"]
-            self.model = mistral_conf["api_model"]
 
-            endpoint = mistral_conf.get("endpoint") if mistral_conf.get(
+            self._name = mistral_conf["model"]
+            model_conf = mistral_conf.get(self._name)
+            api_key = model_conf["api_key"]
+            self.model = self._name
+
+            endpoint = model_conf.get("endpoint") if model_conf.get(
                 "endpoint") else None
-            api_type = "azure" if mistral_conf.get(
+            api_type = "azure" if model_conf.get(
                 "endpoint") else "la_plateforme"
 
-            self.client = MistralClient(
+            self.client = Mistral(
                 api_key=api_key,
-                endpoint=endpoint if api_type == 'azure' else "https://api.mistral.ai",
+                server_url=endpoint if api_type == 'azure' else "https://api.mistral.ai",
             )
 
         except Exception as e:
@@ -39,13 +40,11 @@ class MistralAILLM(Model):
                 n_responses = 1
                 logging.warning("n_responses must be 1 if stream is True")
 
-            # Convert messages into Mistral ChatMessages
             if len(messages) == 1:
-                messages = [ChatMessage(
-                    role='user', content=messages[0]['content'])]
+                messages = [
+                    {"role":'user', "content":messages[0]['content']}]
             else:
-                messages = [ChatMessage(
-                    role=message['role'], content=message['content']) for message in messages]
+                messages = [{"role":message['role'], "content":message['content']} for message in messages]
 
             if stream:
                 stream_response = self.client.chat_stream(

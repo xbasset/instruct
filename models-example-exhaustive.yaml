@@ -9,17 +9,17 @@
 
 # ollama:
 #   mistral:
-#     ollama_endpoint: "http://localhost:11434"
+#     endpoint: "http://localhost:11434"
 #   llama3:
-#     ollama_endpoint: "http://localhost:11434"
+#     endpoint: "http://localhost:11434"
 
 ## For cloud models, create an account and get the API key from the respective model provider
 
 # openai:
 #   gpt-4o:
-#     openai_api_key: <your-openai-api-key>
+#     api_key: <your-openai-api-key>
 #   gpt-4-turbo-preview:
-#     openai_api_key: <your-openai-api-key>
+#     api_key: <your-openai-api-key>
 
 
 # azure:

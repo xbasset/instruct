@@ -42,30 +42,33 @@ class Instruct:
             self.available_models = None
             raise Exception(
                 f"Error loading available models: {e}")
+        try:
+            if forced_model is not None and self.available_models is not None:
+                console.print(f"forced model: {forced_model}")
+                for provider in self.available_models:
+                    if provider['model'] == forced_model:
+                        self.forced_model: Model = provider['provider']
+                        logging.info(f"Forced model: {forced_model}")
+                        break
+                if self.forced_model is None:
+                    logging.info(f"Forced model not found: {forced_model}")
+            else:
+                self.forced_model = None
 
-        if forced_model is not None and self.available_models is not None:
-            console.print(f"forced model: {forced_model}")
-            for provider in self.available_models:
-                if provider['model_name'] == forced_model:
-                    self.forced_model: Model = provider['provider']
-                    logging.info(f"Forced model: {forced_model}")
-                    break
-            if self.forced_model is None:
-                logging.info(f"Forced model not found: {forced_model}")
-        else:
-            self.forced_model = None
+            # store the other arguments for later use
+            self.kwargs = kwargs
+            self.shebangs = []
+            self.template = None
+            self.raw_template = None
+            self._parse_file()
 
-        # store the other arguments for later use
-        self.kwargs = kwargs
-        self.shebangs = []
-        self.template = None
-        self.raw_template = None
-        self._parse_file()
-
-        from instruct.llm_engine.providers.model_loader import ModelLoader
-        self.available_models = ModelLoader().providers
-        self.models = [d['model_name'] for d in self.shebangs]
-        
+            from instruct.llm_engine.providers.model_loader import ModelLoader
+            self.available_models = ModelLoader().providers
+            # console.print(f"[dim]available models: {self.available_models}[/dim]")
+            self.models = [d['model'] for d in self.shebangs]
+        except Exception as e:
+            raise Exception(f"Error initializing Instruct: {e}")
+            
 
     @property
     def tags(self):
@@ -118,9 +121,8 @@ class Instruct:
             # logging.info(f"available models: {self.available_models}")
             for model in self.models:
                 for provider in self.available_models:
-                    # logging.info(f"Checking provider: {provider['model_name']}")
-                    if provider['model_name'] == model:
-                        selected_model = provider['provider']
+                    if provider.name == model:
+                        selected_model = provider
                         break
 
                 if selected_model is not None:
@@ -144,14 +146,14 @@ class Instruct:
                     shebang = lines[i].strip()
                     match = re.search(r'#!\s*([^/]*)/?([^/]*)?', shebang)
                     if match is not None:
-                        model_name, version = match.groups()
+                        model, version = match.groups()
                         self.shebangs.append({
-                            'model_name': model_name,
+                            'model': model,
                             'version': version if version else 'latest'
                         })
                     else:
                         raise ValueError(
-                            f"Invalid shebang: {shebang}\nFormat: #! model_name(/version)")
+                            f"Invalid shebang: {shebang}\nFormat: #! model(/version)")
                     i += 1
                 # find the first non empty line after shebangs
                 while not lines[i].strip():
