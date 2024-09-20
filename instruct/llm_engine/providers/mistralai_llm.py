@@ -17,6 +17,7 @@ class MistralAILLM(Model):
             model_conf = mistral_conf.get(self._name)
             api_key = model_conf["api_key"]
             self.model = self._name
+            
 
             endpoint = model_conf.get("endpoint") if model_conf.get(
                 "endpoint") else None
@@ -47,7 +48,7 @@ class MistralAILLM(Model):
                 messages = [{"role":message['role'], "content":message['content']} for message in messages]
 
             if stream:
-                stream_response = self.client.chat_stream(
+                stream_response = self.client.chat.stream(
                     model=self.model, messages=messages, temperature=temperature, max_tokens=max_tokens)
 
                 complete_text = ""
@@ -61,7 +62,7 @@ class MistralAILLM(Model):
                             logging.error(
                                 f"🔴 Error in streamCallback : {e}")
             else:
-                response = self.client.chat(
+                response = self.client.chat.complete(
                     model=self.model, messages=messages, temperature=temperature, max_tokens=max_tokens)
 
                 complete_text = response.choices[0].message.content
@@ -89,7 +90,7 @@ class MistralAILLM(Model):
 
             if self.model not in instruct.models:
                 logging.warning(
-                    f"{pt} does not contain model: {self.model} in its dashbangs")
+                    f"{instruct} does not contain model: {self.model} in its dashbangs")
             messages = [{"role": "user", "content": instruct.prompt}]
             responses = self.invoke(messages, temperature, max_tokens, n_responses=n_responses,
                                     frequency_penalty=frequency_penalty, presence_penalty=presence_penalty, stream=stream, stream_callback=stream_callback, json_format=json_format)
@@ -97,3 +98,23 @@ class MistralAILLM(Model):
         except Exception as e:
             raise Exception(
                 f"Error in Mistral AI chat : {e}")
+
+
+
+if __name__ == "__main__":
+
+    api_key = "GImprxgjZDsnnsH1eTpOK8nqWySbM2tV"
+    model = "mistral-large-latest"
+
+    client = Mistral(api_key=api_key)
+
+    chat_response = client.chat.complete(
+        model= model,
+        messages = [
+            {
+                "role": "user",
+                "content": "What is the best French cheese?",
+            },
+        ]
+    )
+    print(chat_response.choices[0].message.content)
