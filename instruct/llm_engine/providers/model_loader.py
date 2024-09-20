@@ -29,9 +29,10 @@ class ModelLoader:
             with open(os.path.expanduser(self.models_conf_filename), 'r') as f:
                 config = yaml.load(f, Loader=yaml.FullLoader) or {}
             return [
-                self._build_provider(p_name, m_name, config[p_name])
+                provider
                 for p_name, models in config.items()
                 for m_name in models
+                if (provider := self._build_provider(p_name, m_name, config[p_name])) is not None
             ]
         except Exception as e:
             logging.error(f"Error loading {self.models_conf_filename}: {e}")
