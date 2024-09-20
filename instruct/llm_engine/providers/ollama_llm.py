@@ -18,7 +18,7 @@ class OllamaLLM(Model):
             self._name = ollama_conf["model"]
             self.model = ollama_conf.get(
                 "model") if ollama_conf.get("model") else None
-            self.endpoint = ollama_conf[self.model].get("endpoint") if ollama_conf[self.model].get(
+            self.endpoint = ollama_conf.get("endpoint") if ollama_conf.get(
                 "endpoint") else None
 
             if self.endpoint is None or self.model is None:

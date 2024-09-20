@@ -22,6 +22,7 @@ Create, run, and evaluate elaborated instructions for Foundational Models like L
   - [Configuration](#configuration)
   - [Examples](#examples)
   - [Contributing](#contributing)
+    - [Developer commands](#developer-commands)
   - [License](#license)
 
 ## Features
@@ -162,6 +163,12 @@ Explore the `examples` directory for various use cases:
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
+
+### Developer commands
+
+```
+python3 -m pip install --force-reinstall --quiet . && instruct run examples/instructions/hello_world.instruct --no-interactivity
+```
 
 ## License
 

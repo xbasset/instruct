@@ -1,12 +1,16 @@
 from .openai_llm import OpenAILLM
 from .mistralai_llm import MistralAILLM
 from .ollama_llm import OllamaLLM
-from .openai_vision_llm import OpenAIVisionLLM
+from .openai_vision_llm import OpenAIVisionModel
 from .groq_llm import GroqLLM
 
 provider_map = {
-    "openai": OpenAILLM,
-    "mistral": MistralAILLM,
-    "ollama": OllamaLLM,
-    "groq": GroqLLM,
+    "openai": {"llm": OpenAILLM, "vision": OpenAIVisionModel},
+    "mistral": {"llm": MistralAILLM},
+    "ollama": {
+        "llm": OllamaLLM,
+    },
+    "groq": {
+        "llm": GroqLLM,
+    },
 }

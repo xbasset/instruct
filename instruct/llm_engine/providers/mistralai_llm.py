@@ -9,12 +9,11 @@ logging.basicConfig(level=logging.ERROR)
 
 class MistralAILLM(Model):
 
-    def __init__(self, mistral_conf):
+    def __init__(self, model_conf):
 
         try:
 
-            self._name = mistral_conf["model"]
-            model_conf = mistral_conf.get(self._name)
+            self._name = model_conf["model"]
             api_key = model_conf["api_key"]
             self.model = self._name
             
