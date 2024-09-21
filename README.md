@@ -23,6 +23,7 @@ Create, run, and evaluate elaborated instructions for Foundational Models like L
   - [Examples](#examples)
   - [Contributing](#contributing)
     - [Developer commands](#developer-commands)
+    - [TODO](#todo)
   - [License](#license)
 
 ## Features
@@ -169,6 +170,13 @@ We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) 
 ```
 python3 -m pip install --force-reinstall --quiet . && instruct run examples/instructions/hello_world.instruct --no-interactivity
 ```
+
+### TODO
+- GUI > add copy to clipboard
+- GUI > lauch GUI without waiting
+- GUI > stream tokens in result view
+- CORE > check replacing LLMs call with datasette.llm
+
 
 ## License
 
