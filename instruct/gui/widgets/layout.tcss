@@ -1,0 +1,9 @@
+
+Screen > TopMenu {
+    layout: grid;
+    grid-size: 3 1;
+}
+
+Screen > ResultViewer {
+    height: 100%;
+}

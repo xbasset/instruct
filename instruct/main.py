@@ -26,11 +26,12 @@ def run(
     feedback: bool = typer.Option(True, help="Whether to ask for feedback"),
     model: str = typer.Option(None, help="Model to use"),
     interactivity: bool = typer.Option(True, help="Enable interactivity"),
+    gui: bool = typer.Option(True, help="Launch GUI"),
 ):
-    if not interactivity:  # could be another option like --gui?
-        from instruct.console_run import run as run_instruct
+    if gui:  # Run in GUI mode
+        from instruct.gui.run import launch_gui as launch_gui
 
-        run_instruct(
+        launch_gui(
             file,
             input=input,
             output=output,
@@ -40,10 +41,10 @@ def run(
             ask_feedback=feedback,
             interactivity=interactivity,
         )
-    else:
-        from instruct.gui_run import launch_gui as launch_gui
+    else:  # Run in console mode
+        from instruct.console_run import run as run_instruct
 
-        launch_gui(
+        run_instruct(
             file,
             input=input,
             output=output,
