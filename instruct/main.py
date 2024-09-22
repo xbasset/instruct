@@ -15,6 +15,19 @@ install()
 
 app = typer.Typer()
 
+@app.command()
+def models(
+    model_only: bool = typer.Option(False, help="Show only model names"),
+):
+    from instruct.llm_engine.providers.model_loader import ModelLoader
+
+    model_loader = ModelLoader()
+    models = model_loader.providers
+    
+    print(f"[bold]Available models:[/bold] [italic][bold green]model_name[/bold green]{' [dim](provider)[/dim]' if not model_only else ''}[/italic]")
+    for model in models:
+        print(f"[bold green]{model.name}[/bold green]{f' [dim]({model.provider})[/dim]' if not model_only else ''}")
+        
 
 @app.command()
 def run(
