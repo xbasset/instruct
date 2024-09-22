@@ -172,7 +172,6 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 ```
 
 ### TODO
-- GUI > add copy to clipboard
 - GUI > lauch GUI without waiting
 - GUI > stream tokens in result view
 - CORE > check replacing LLMs call with datasette.llm

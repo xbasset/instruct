@@ -4,7 +4,7 @@ from textual.binding import Binding
 
 from instruct.gui.widgets.top_menu import TopMenu
 from instruct.gui.widgets.result_viewer import ResultViewer
-
+import pyperclip
 
 
 class InstructLayout(App):
@@ -19,7 +19,7 @@ class InstructLayout(App):
             description="Show help screen",
             key_display="?",
         ),
-        Binding(key="j", action="down", description="Scroll down", show=False),
+        Binding(key="c", action="copy_result", description="Copy content to clipboard", show=True),
     ]
 
     def __init__(self, content, model, max_tokens, temperature, **kwargs):
@@ -50,6 +50,14 @@ class InstructLayout(App):
     
     def action_help(self):
         self.notify("This is the GUI of `instruct`", severity="information")
+
+    def action_copy_result(self):
+        try:
+            pyperclip.copy(self.content)
+            self.notify(f"Copied to clipboard")
+        except Exception as e:
+            self.notify(f"Error copying to clipboard: {e}", level="error", title="Error")
+
 
 
 # if __name__ == "__main__":
