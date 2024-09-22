@@ -30,7 +30,7 @@ def launch_gui(filepath, input=None, output=None, temperature=0, max_tokens=200,
         result = instruct.run(temperature=temperature, max_tokens=max_tokens)
 
 
-        app = InstructLayout(content=result, model=instruct.matching_model.name, max_tokens=str(max_tokens), temperature=str(temperature))
+        app = InstructLayout(instruct=instruct, content=result, model=instruct.matching_model.name, max_tokens=max_tokens, temperature=temperature)
         app.run()
 
     except Exception as e:

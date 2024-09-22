@@ -20,13 +20,24 @@ class InstructLayout(App):
             key_display="?",
         ),
         Binding(key="c", action="copy_result", description="Copy content to clipboard", show=True),
+        Binding(key="r", action="reload", description="Reload the instruct", show=True),
     ]
 
-    def __init__(self, content, model, max_tokens, temperature, **kwargs):
+    def __init__(self, instruct, content, model, max_tokens:int, temperature:int, **kwargs):
         self.content = content
         self.model = model
         self.max_tokens = max_tokens
         self.temperature = temperature
+        self.instruct = instruct
+
+
+        self.top_menu = TopMenu([self.model, str(self.temperature), str(self.max_tokens)])
+        self.top_menu.styles.height = "1fr"
+
+        self.result_viewer = ResultViewer(self.content)
+        self.result_viewer.styles.height = "9fr"
+        self.result_viewer.styles.border = ("heavy", "white")
+
         super().__init__(**kwargs)
 
     def on_mount(self):
@@ -34,18 +45,15 @@ class InstructLayout(App):
         self.sub_title = "Result Viewer"
 
     def compose(self) -> ComposeResult:
-        top_menu = TopMenu([self.model, self.temperature, self.max_tokens])
-        top_menu.styles.height = "1fr"
 
-        result_viewer = ResultViewer(self.content)
-        result_viewer.styles.height = "9fr"
-        result_viewer.styles.border = ("heavy", "white")
+
+
 
 
         yield Header( show_clock=False)
-        yield top_menu
+        yield self.top_menu
 
-        yield result_viewer
+        yield self.result_viewer
         yield Footer()
     
     def action_help(self):
@@ -57,6 +65,18 @@ class InstructLayout(App):
             self.notify(f"Copied to clipboard")
         except Exception as e:
             self.notify(f"Error copying to clipboard: {e}", level="error", title="Error")
+
+    def action_reload(self):
+        try:
+            reloaded = self.instruct.run(temperature=self.temperature, max_tokens=self.max_tokens)
+            self.content = reloaded
+            self.result_viewer.remove()
+            self.result_viewer = ResultViewer(self.content)
+            self.result_viewer.styles.height = "9fr"
+            self.result_viewer.styles.border = ("heavy", "white")
+            self.mount(self.result_viewer)
+        except Exception as e:
+            self.notify(f"Error reloading instruct: {e}", level="error", title="Error")
 
 
 
