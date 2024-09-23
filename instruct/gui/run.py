@@ -13,7 +13,7 @@ from instruct.gui.widgets.layout import InstructLayout
 
 console = Console()
 
-def launch_gui(filepath, input=None, output=None, temperature=0, max_tokens=200, model=None, ask_feedback=False, interactivity=True):
+def run_gui(filepath, input=None, output=None, temperature=0, max_tokens=200, model=None, ask_feedback=False, interactivity=True):
     try:
         # run the GUI
         start_time = time.time()

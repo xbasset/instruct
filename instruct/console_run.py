@@ -10,7 +10,7 @@ import time
 
 console = Console()
 
-def run(filepath, input=None, output=None, temperature=0, max_tokens=200, model=None, ask_feedback=False, interactivity=True):
+def run_console(filepath, input=None, output=None, temperature=0, max_tokens=200, model=None, ask_feedback=False, interactivity=True):
     try:
         console.log(f"Running: [bold green]{filepath}[/bold green]")
         start_time = time.time()

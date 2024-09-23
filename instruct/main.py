@@ -42,9 +42,9 @@ def run(
     gui: bool = typer.Option(True, help="Launch GUI"),
 ):
     if gui:  # Run in GUI mode
-        from instruct.gui.run import launch_gui as launch_gui
+        from instruct.gui.run import run_gui
 
-        launch_gui(
+        run_gui(
             file,
             input=input,
             output=output,
@@ -55,9 +55,9 @@ def run(
             interactivity=interactivity,
         )
     else:  # Run in console mode
-        from instruct.console_run import run as run_instruct
+        from instruct.console_run import run_console
 
-        run_instruct(
+        run_console(
             file,
             input=input,
             output=output,
