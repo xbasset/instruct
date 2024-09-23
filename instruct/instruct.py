@@ -32,7 +32,7 @@ class Instruct:
         _perform_templating(**kwargs): Performs templating using the provided keyword arguments.
     """
 
-    def __init__(self, filepath, forced_model=None, **kwargs):
+    def __init__(self, filepath:str, forced_model=None, **kwargs):
         self.filepath = filepath
 
         try:

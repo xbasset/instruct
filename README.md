@@ -175,7 +175,7 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 - GUI > lauch GUI without waiting
 - GUI > stream tokens in result view
 - CORE > check replacing LLMs call with datasette.llm
-
+- CORE > add "import file content" in the .instruct syntax (see Jinja2 features?)
 
 ## License
 
