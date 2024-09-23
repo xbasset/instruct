@@ -176,6 +176,14 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 - GUI > stream tokens in result view
 - CORE > check replacing LLMs call with datasette.llm
 - CORE > add "import file content" in the .instruct syntax (see Jinja2 features?)
+- FEAT > Display token count of output
+- FEAT > Display prompt view with tokenizer colorization and input token count
+- GUI > Design top menu to change values of temp, max_tokens and select model from the list in file_instruct's shebang
+- FIX > --model flag in run command
+- DOC > Create a getting started and tutorial
+- FEAT > Create a wizard for 1st run to initialize ~/.instruct/models.yaml from ENV variables and step by step guide
+- create a README à la https://github.com/darold/pgbadger/blob/master/doc/pgBadger.pod
+- FEAT > In GUI mode, save each calls in ./instruct/dataset pair query<>answer + instruct model used [optional feedback, use case] for further use
 
 ## License
 

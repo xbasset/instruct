@@ -53,11 +53,3 @@ With this "instruction-based" fine-tuning strategy, the LLM is more prone to ans
 
 This package is taking inspiration from the Mojodex Prompt Template library, which has been designed and built as a way to handle the complex prompting strategy.
 This effort is a way to make this tool independent, simple and easy to use for developers to explore LLMs querying.
-
-## TODO
-
-
-- fix --model flag in run command
-- create a getting started and tutorial
-- create a README à la https://github.com/darold/pgbadger/blob/master/doc/pgBadger.pod
-- save each calls in ./instruct/dataset pair query<>answer + instruct model used [optional feedback, use case] for further use
