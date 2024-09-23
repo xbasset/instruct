@@ -14,19 +14,18 @@ from instruct.instruct import Instruct
 
 class OpenAILLM(Model):
 
-    def __init__(self, llm_conf):
+    def __init__(self, model_conf):
         """
         :param api_key: API key to call openAI
-        :param api_base: Endpoint to call openAI
+        :param endpoint: Endpoint to call openAI
         :param api_version: Version of the API to user
         :param model: Model to use (deployment_id for azure)
         :param api_type: 'azure' or 'openai'
         """
         try:
-            self._name = llm_conf["model"]
-            model_conf = llm_conf.get(self._name)
+            self._name = model_conf["model"]
             api_key = model_conf["api_key"]
-            api_base = model_conf["api_base"] if "api_base" in model_conf else None
+            endpoint = model_conf["endpoint"] if "endpoint" in model_conf else None
             api_version = model_conf["api_version"] if "api_version" in model_conf else None
             api_type = model_conf["api_type"] if "api_type" in model_conf else "openai"
             self.deployment = model_conf["deployment_id"] if "deployment_id" in model_conf else None
@@ -36,7 +35,7 @@ class OpenAILLM(Model):
 
             self.client = AzureOpenAI(
                 api_version=api_version,
-                azure_endpoint=api_base,
+                azure_endpoint=endpoint,
                 azure_deployment=self.deployment,
                 api_key=api_key
             ) if api_type == 'azure' else OpenAI(api_key=api_key)

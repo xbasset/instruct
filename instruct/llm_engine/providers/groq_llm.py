@@ -10,11 +10,10 @@ from groq import Groq
 
 class GroqLLM(Model):
 
-    def __init__(self, groq_conf):
+    def __init__(self, model_conf):
 
         try:
-            self._name = groq_conf["model"]
-            model_conf = groq_conf.get(self._name)
+            self._name = model_conf["model"]
             self.model = self._name
 
             if self.model is None:

@@ -29,6 +29,22 @@ class Model(ABC):
     def name(self, value):
         self._name = value
 
+    @property
+    def type(self):
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        self._type = value
+
+    @property
+    def provider(self):
+        return self._provider
+
+    @provider.setter
+    def provider(self, value):
+        self._provider = value
+
     @abstractmethod
     def invoke(self, messages, temperature, max_tokens):
         """

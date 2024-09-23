@@ -22,6 +22,8 @@ Create, run, and evaluate elaborated instructions for Foundational Models like L
   - [Configuration](#configuration)
   - [Examples](#examples)
   - [Contributing](#contributing)
+    - [Developer commands](#developer-commands)
+    - [TODO](#todo)
   - [License](#license)
 
 ## Features
@@ -162,6 +164,18 @@ Explore the `examples` directory for various use cases:
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
+
+### Developer commands
+
+```
+python3 -m pip install --force-reinstall --quiet . && instruct run examples/instructions/hello_world.instruct --no-interactivity
+```
+
+### TODO
+- GUI > lauch GUI without waiting
+- GUI > stream tokens in result view
+- CORE > check replacing LLMs call with datasette.llm
+- CORE > add "import file content" in the .instruct syntax (see Jinja2 features?)
 
 ## License
 

@@ -8,7 +8,7 @@ from typing import List
 from instruct.instruct import Instruct
 
 
-class OpenAIVisionLLM(OpenAILLM):
+class OpenAIVisionModel(OpenAILLM):
 
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -20,7 +20,7 @@ class OpenAIVisionLLM(OpenAILLM):
         try:
             extension = image_name.split(".")[-1].lower()
             # check if extension is allowed
-            if extension not in OpenAIVisionLLM.ALLOWED_EXTENSIONS:
+            if extension not in OpenAIVisionModel.ALLOWED_EXTENSIONS:
                 raise Exception(f"Image extension not allowed: {extension}")
             return 'data:image/' + extension
         except Exception as e:
