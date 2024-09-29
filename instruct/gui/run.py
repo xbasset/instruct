@@ -8,7 +8,7 @@ from rich.text import Text
 import os
 
 
-from instruct.gui.widgets.layout import InstructLayout
+from instruct.gui.instruct_app import InstructApp
 
 console = Console()
 
@@ -25,7 +25,7 @@ def run_gui(filepath, input=None, output=None, temperature=0, max_tokens=200, mo
 
         
 
-        app = InstructLayout(instruct_file=filepath, input=input, max_tokens=max_tokens, temperature=temperature, forced_model=model, **values)
+        app = InstructApp(instruct_file=filepath, input=input, max_tokens=max_tokens, temperature=temperature, forced_model=model, **values)
         app.run()
 
     except Exception as e:
