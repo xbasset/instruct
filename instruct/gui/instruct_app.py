@@ -14,30 +14,6 @@ from textual.reactive import reactive
 
 from textual import work
 
-final_content = """
-Here is a sonnet about Allemont and its surroundings:
-
-In Allemont, where nature's beauty shines,
-Le Cornillon's peaks invite you to ascend,
-Belledonne's grandeur beckons, a divine
-Experience awaiting, for hikers to amend.
-
-Le Taillefer's slopes, a cyclist's delight,
-Rolling hills and valleys, a scenic ride,
-While l'Étendard's forests whisper secrets bright,
-A haven for nature lovers, side by side.
-
-In summer, wildflowers bloom, a colorful sight,
-In winter, snowflakes dance, a winter wonderland,
-Allemont, a haven, where outdoor dreams take flight,
-A destination for adventure, at your command.
-
-So come, dear traveler, and let your spirit soar,
-In Allemont, where nature's beauty leaves you more.
-
-I hope you enjoy it!"""
-
-
 # Method to simulate a text streaming that outputs the final_content word by word with a delay of 0.05 seconds per word, and takes a callback function as an argument that is called after each word is simulately generated.
 import time
 
@@ -48,22 +24,17 @@ class InstructApp(App):
     CSS_PATH = "instruct_app.tcss"
 
     BINDINGS = [
-        Binding(key="q", action="quit", description="Quit the app"),
-        Binding(
-            key="question_mark",
-            action="help",
-            description="Show help screen",
-            key_display="?",
-        ),
+        Binding(key="q", action="quit", description="Quit", show=True),
+
         Binding(
             key="c",
             action="copy_result",
-            description="Copy content to clipboard",
+            description="Copy to clipboard",
             show=True,
         ),
-        Binding(key="r", action="reload", description="Reload the instruct", show=True),
+        Binding(key="r", action="reload", description="Reload", show=True),
         Binding(
-            key="s", action="save", description="Save result to .md file", show=True
+            key="s", action="save", description="Save to file", show=True
         ),
     ]
 
@@ -118,45 +89,32 @@ class InstructApp(App):
         top_menu.styles.height = "1fr"
 
         await self.run_instruct()
-        # self.call_after_refresh(self.run_instruct)
-        # self.content = final_content
 
-    @work(thread=True)
-    def simulate_text_streaming(self, callback):
-        words = final_content.split()
-        complete_text = ""
-        for word in words:
-            complete_text += word + " "
-            self.app.call_from_thread(callback, complete_text)
-            time.sleep(0.05)
-        return final_content
-
-
+        
     # @work(thread=True)
     async def run_instruct(self):
         try:
-
-            # self.notify(f"Running with model: {self.model}")
-
-            # result = self.instruct.run(
-            #     temperature=self.temperature, max_tokens=self.max_tokens,
-            #     stream=True,
-            #     stream_callback=self._token_received
-            # )
-            result = self.simulate_text_streaming(self._token_received)
-            # self.query_one("#result_viewer").loading = False
+            self.call_run_instruct()
         except Exception as e:
             self.notify(f"Error running instruct: {e}", severity="error", title="Error")
+    
+    @work(thread=True)
+    def call_run_instruct(self):
+        self.query_one("#result_viewer").loading = True
+        self.instruct.run(
+                        temperature=self.temperature, max_tokens=self.max_tokens,
+                        stream=True,
+                        stream_callback= lambda token: self.app.call_from_thread(self._token_received, token)
+                    )
 
     def _token_received(self, token):
         try:
             self.content = token
+            if self.content != "":
+                self.query_one("#result_viewer").loading = False
             self.refresh(layout=True)
         except Exception as e:
             self.notify(f"Error updating content: {e}", severity="error", title="Error")
-
-    def action_help(self):
-        self.notify("This is the GUI of `instruct`", severity="information")
 
     def action_copy_result(self):
         try:
