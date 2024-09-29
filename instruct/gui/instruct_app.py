@@ -14,7 +14,6 @@ from textual.reactive import reactive
 
 from textual import work
 
-# Method to simulate a text streaming that outputs the final_content word by word with a delay of 0.05 seconds per word, and takes a callback function as an argument that is called after each word is simulately generated.
 import time
 
 
@@ -127,6 +126,7 @@ class InstructApp(App):
 
     def action_reload(self):
         try:
+            # TODO: reload the .instruct file before running
             self.query_one("#result_viewer").loading = True
             self.call_after_refresh(self.run_instruct)
         except Exception as e:

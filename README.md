@@ -31,9 +31,12 @@ Create, run, and evaluate elaborated instructions for Foundational Models like L
 - **Create Rich Instructions**: Write developer-grade instructions to leverage the full potential of LLMs in the [VS Code Extension](https://github.com/xbasset/vscode-instruct)
 ![Instruct VS Code Extension](/assets/vscode-instruct.png)
 
-- **Run Instructions**: Execute instructions on different LLMs with simple configuration from Python and directly your from CLI
+- **Run Instruction GUI**: See the interpretation of your `.instruct` for quick iterations in no time
+![Instruct terminal GUI](/assets/gui-instruct.png)
 
-![alt text](/assets/instruct-cli.png)
+- **CLI**: Execute instructions on different LLMs with easy configuration directly from your CLI
+
+![CLI execution](/assets/instruct-cli.png)
 
 - **[SOON] Evaluate Instructions**: Perform statistical evaluations to ensure the robustness of instructions across multiple models.
 
@@ -109,7 +112,7 @@ To run an instruction, use the `Instruct` class:
 ```python
 from instruct.instruct import Instruct
 
-pt = Instruct("hello_world.instruct", name="Alice")
+instruct = Instruct("hello_world.instruct", name="Alice")
 result = instruct.run(temperature=0.7, max_tokens=50)
 print(result)
 ```
@@ -173,7 +176,6 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 
 ### TODO
 - BUG > reload doesn't take into account the change into .instruct file
-- GUI > stream tokens in result view
 - CORE > check replacing LLMs call with datasette.llm
 - CORE > add "import file content" in the .instruct syntax (see Jinja2 features?)
 - FEAT > Display token count of output
