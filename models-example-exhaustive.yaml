@@ -2,78 +2,52 @@
 ## 1. Follow the model installation instructions or get the API key from the respective model provider
 ## 2. Uncomment and fill in the values for the models you want to use
 ## See the documentation for more details: https://github.com/xbasset/instruct
-## If you don't find your preferred provider / model, please open an issue on GitHub
 
 ## For local models, you can use the following configuration
 ## Pre-requisite: Ollama installation instructions https://ollama.com/
-
-# ollama:
-#   llm:
-#     mistral:
-#       endpoint: "http://localhost:11434"
-#     llama3:
-#       endpoint: "http://localhost:11434"
-#     phi3:
-#       endpoint: "http://localhost:11434"
-#     gemma2:
-#       endpoint: "http://localhost:11434"
-#     mistral-nemo:
-#       endpoint: "http://localhost:11434"
-  
-
 ## For cloud models, create an account and get the API key from the respective model provider
 
-openai:
-  llm:
-    gpt-4-turbo-preview:
-      api_key: <API_KEY>
-    gpt-4o:
-      api_key: <API_KEY>
+models:
+  ollama/llama3.1:
+      name: llama3.1
+      base_url: "http://localhost:11434"
+  ollama/llama3:
+      name: llama3
+      base_url: "http://localhost:11434"
+  ollama/gemma2:
+      name: gemma2
+      base_url: "http://localhost:11434"
+  ollama/mistral-nemo:
+      name: mistral-nemo
+      base_url: "http://localhost:11434"
 
-azure:
-  llm:
-    gpt4-turbo:
+  openai/gpt-4-turbo-preview:
+      name: gpt-4-turbo
+      api_key: <your-api-key>
+  openai/gpt-4o:
+      name: gpt-4o
+      api_key: <your-api-key>
+
+  azure/prod-gpt4o:
       client: openai
-      api_type: azure
-      endpoint: <ENDPOINT>
-      api_version: <API_VERSION>
-      api_key: <API_KEY>
-      deployment_id: <DEPLOYMENT_ID>
-    gpt-4o:
-      client: openai
-      api_type: azure
-      endpoint: <ENDPOINT>
-      api_version: <API_VERSION>
-      api_key: <API_KEY>
-      deployment_id: <DEPLOYMENT_ID>
-    mistral-large-latest:
+      name: gpt-4o
+      base_url: <your-endpoint>
+      api_version: <your-api-version>
+      api_key: <your-api-key>
+
+  azure/mistral-large-latest:
       client: mistral
-      api_type: azure
-      api_base: <API_BASE>
-      api_key: <API_KEY>
-  vision:
-    gpt-4o-vision:
-      client: openai
-      api_type: azure
-      endpoint: <ENDPOINT>
-      api_version: <API_VERSION>
-      api_key: <API_KEY>
-      deployment_id: <DEPLOYMENT_ID>
+      name: mistral-large
+      base_url: <your-endpoint>
+      api_key: <your-api-key>
 
+  mistral/mistral-large-2407:
+      name: mistral-large
+      api_key: <your-api-key>
 
-
-mistral:
-  llm:
-    mistral-large-2402:
-      api_key: <API_KEY>
-    mistral-large-2407:
-      api_key: <API_KEY>
-    mistral-large-latest:
-      api_key: <API_KEY>
-
-groq:
-  llm:
-    llama3-70b-8192:
-      api_key: <API_KEY>
-    mixtral-8x7b-32768:
-      api_key: <API_KEY>
+  groq/llama3-70b-8192:
+      name: llama3-70b-8192
+      api_key: <your-api-key>
+  groq/mixtral-8x7b-32768:
+      name: mixtral-8x7b-32768
+      api_key: <your-api-key>
