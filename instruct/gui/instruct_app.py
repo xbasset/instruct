@@ -1,5 +1,5 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Markdown, Header, Footer, Static
+from textual.widgets import Markdown, Header, Footer, Static, RichLog
 from textual.binding import Binding
 from rich import print
 
@@ -35,6 +35,7 @@ class InstructApp(App):
         Binding(
             key="s", action="save", description="Save to file", show=True
         ),
+        Binding(key="l", action="toggle_log_view", description="Show/hide logs", show=True),
     ]
 
     max_tokens = reactive(1000)
@@ -75,6 +76,7 @@ class InstructApp(App):
             id="top_menu",
         ).data_bind(InstructApp.model)
 
+        yield RichLog(id="log")
         yield ResultViewer(id="result_viewer").data_bind(InstructApp.content)
         yield Footer()
 
@@ -86,6 +88,8 @@ class InstructApp(App):
         result_viewer.styles.border = ("heavy", "white")
         top_menu = self.query_one("#top_menu")
         top_menu.styles.height = "1fr"
+        rich_log = self.query_one("#log")
+        rich_log.styles.height = "1fr"
 
         await self.run_instruct()
 
@@ -93,12 +97,14 @@ class InstructApp(App):
     # @work(thread=True)
     async def run_instruct(self):
         try:
+            self._write_to_log(f"Running instruct with model: {self.instruct.matching_model.model}")
             self.call_run_instruct()
         except Exception as e:
             self.notify(f"Error running instruct: {e}", severity="error", title="Error")
     
     @work(thread=True)
     def call_run_instruct(self):
+        self.query_one("#log").write("Running instruct...")
         self.query_one("#result_viewer").loading = True
         self.instruct.run(
                         temperature=self.temperature, max_tokens=self.max_tokens,
@@ -108,12 +114,16 @@ class InstructApp(App):
 
     def _token_received(self, token):
         try:
+            self._write_to_log("Receiving Token...")
             self.content = token
             if self.content != "":
                 self.query_one("#result_viewer").loading = False
             self.refresh(layout=True)
         except Exception as e:
             self.notify(f"Error updating content: {e}", severity="error", title="Error")
+
+    def _write_to_log(self, message):
+        self.query_one("#log").write(message)
 
     def action_copy_result(self):
         try:
@@ -165,6 +175,17 @@ class InstructApp(App):
         raise RuntimeError(
             "Unable to find a non-existent file name after many attempts."
         )
+    
+    def action_toggle_log_view(self):
+        rich_log = self.query_one("#log")
+        current_visibility = rich_log.styles.visibility 
+        if current_visibility == "hidden":
+            rich_log.styles.visibility = "visible"
+            rich_log.styles.height = "1fr"
+        else:
+            rich_log.styles.visibility = "hidden"
+            rich_log.styles.height = "0fr"
+        
 
 
 if __name__ == "__main__":
