@@ -1,15 +1,11 @@
-import configparser
 import logging
 import os
 from typing import List
 import yaml
-from rich.console import Console
 from instruct.llm_engine.model import Model
 
 
 logging.basicConfig(level=logging.ERROR)
-console = Console()
-
 
 class ModelLoader:
     models_conf_filename = "~/.instruct/models.yaml"

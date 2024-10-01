@@ -37,7 +37,7 @@ class Instruct:
         self.filepath = filepath
 
         try:
-            from instruct.llm_engine.providers.model_loader import ModelLoader
+            from instruct.llm_engine.model_loader import ModelLoader
 
             self.available_models : List[Model]= ModelLoader().models
             # console.print(f"[dim]available models: {self.available_models}[/dim]")
@@ -64,7 +64,7 @@ class Instruct:
             self.raw_template = None
             self._parse_file()
 
-            from instruct.llm_engine.providers.model_loader import ModelLoader
+            from instruct.llm_engine.model_loader import ModelLoader
 
             self.available_models = ModelLoader().models
             # console.print(f"[dim]available models: {self.available_models}[/dim]")
