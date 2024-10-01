@@ -3,6 +3,7 @@ import re
 
 from instruct.llm_engine.model import Model
 import logging
+from typing import List
 
 from rich.console import Console
 from rich.markdown import Markdown
@@ -38,7 +39,7 @@ class Instruct:
         try:
             from instruct.llm_engine.providers.model_loader import ModelLoader
 
-            self.available_models = ModelLoader().providers
+            self.available_models : List[Model]= ModelLoader().models
             # console.print(f"[dim]available models: {self.available_models}[/dim]")
         except Exception as e:
             self.available_models = None
@@ -46,9 +47,9 @@ class Instruct:
         try:
             if forced_model is not None and self.available_models is not None:
                 console.print(f"forced model: {forced_model}")
-                for provider in self.available_models:
-                    if provider["model"] == forced_model:
-                        self.forced_model: Model = provider["provider"]
+                for model in self.available_models:
+                    if model.name == forced_model:
+                        self.forced_model: Model = model
                         logging.info(f"Forced model: {forced_model}")
                         break
                 if self.forced_model is None:
@@ -65,7 +66,7 @@ class Instruct:
 
             from instruct.llm_engine.providers.model_loader import ModelLoader
 
-            self.available_models = ModelLoader().providers
+            self.available_models = ModelLoader().models
             # console.print(f"[dim]available models: {self.available_models}[/dim]")
             self.models = [d["model"] for d in self.shebangs]
         except Exception as e:
@@ -119,19 +120,17 @@ class Instruct:
 
     @property
     def matching_model(self) -> Model:
-        # return the first available model matching with the shebangs
+        # return the first available model in the config file matching with the shebangs
         try:
             selected_model = None
-            # logging.info(f"available models: {self.available_models}")
             for model in self.models:
-                for provider in self.available_models:
-                    if provider.name == model:
-                        selected_model = provider
+                for available_model in self.available_models:
+                    if available_model.name == model:
+                        selected_model = available_model
                         break
 
                 if selected_model is not None:
                     break
-
             return selected_model
         except Exception as e:
             logging.error(f"Error finding matching model: {e}")
@@ -226,11 +225,11 @@ class Instruct:
                 logging.info(
                     f"Running prompt with forced model: {self.forced_model.name}"
                 )
-                return self.forced_model.invoke_from_pt(self, **kwargs)[0]
+                return self.forced_model.interpret(self, **kwargs)[0]
 
             elif self.matching_model is not None:
                 logging.info(f"run with args: {kwargs}")
-                return self.matching_model.invoke_from_pt(self, **kwargs)[0]
+                return self.matching_model.interpret(self, **kwargs)[0]
             else:
                 raise Exception(
                     f"""
@@ -238,7 +237,7 @@ class Instruct:
 providers: {self.available_models}
 Instruct's compatibility list: {self.models}
 To fix the problem:
-1. Check the providers in the models.conf file.
+1. Check the providers in the ~/.instruct/models.yaml file.
 2. Check the Instruct file's shebangs for compatibility with the providers."""
                 )
 
