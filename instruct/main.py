@@ -16,9 +16,7 @@ install()
 app = typer.Typer()
 
 @app.command()
-def models(
-    model_only: bool = typer.Option(False, help="Show only model names"),
-):
+def models():
     from instruct.llm_engine.model_loader import ModelLoader
 
     model_loader = ModelLoader()
@@ -31,6 +29,8 @@ def models(
 
     print("[blue]Note: [/blue] [bold]instruct[/bold] uses the first model in the list which [bold blue]name[/bold blue] matches with the first in the `.instruct` file's shebang.")
     print("[bold blue]See instruct file structure doc[/bold blue] to learn more.")
+
+
 @app.command()
 def run(
     file: str,

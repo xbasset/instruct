@@ -16,6 +16,10 @@ from textual import work
 
 import time
 
+import logging
+
+logging.basicConfig(level=logging.ERROR)
+
 
 class InstructApp(App):
     SAVED_FILE_EXT = ".md"
@@ -37,8 +41,8 @@ class InstructApp(App):
         ),
     ]
 
-    max_tokens = reactive(1000)
-    temperature = reactive(0.7)
+    max_tokens = reactive(0)
+    temperature = reactive(0)
     model = reactive("")
 
     content = reactive("")
@@ -63,16 +67,12 @@ class InstructApp(App):
         self.instruct = Instruct(
             filepath=self.instruct_file, **self.input if self.input else {}
         )
-        self.model = (
-            self.instruct.matching_model.name
-        )  # TODO: fix the update model name in the top menu
+        self.model = self.instruct.matching_model.name
 
     def compose(self) -> ComposeResult:
-        yield Header(show_clock=False)
         yield TopMenu(
-            [str(self.model), str(self.temperature), str(self.max_tokens)],
             id="top_menu",
-        ).data_bind(InstructApp.model)
+        ).data_bind(InstructApp.model, InstructApp.max_tokens, InstructApp.temperature)
 
         yield RichLog(id="log")
         yield ResultViewer(id="result_viewer").data_bind(InstructApp.content)
@@ -81,11 +81,10 @@ class InstructApp(App):
     async def on_mount(self):
         self.title = "Instruct"
         self.sub_title = "Result Viewer"
+        self.model = self.instruct.matching_model.name
         result_viewer = self.query_one("#result_viewer")
         result_viewer.styles.height = "9fr"
         result_viewer.styles.border = ("heavy", "white")
-        top_menu = self.query_one("#top_menu")
-        top_menu.styles.height = "1fr"
         rich_log = self.query_one("#log")
         rich_log.styles.height = "0fr"
         rich_log.styles.visibility = "hidden"
@@ -143,6 +142,8 @@ class InstructApp(App):
             self.instruct = Instruct(
                 filepath=self.instruct_file, **self.input if self.input else {}
             )
+
+            self.model = self.instruct.matching_model.name
 
             # clear log
             self.query_one("#log").clear()
