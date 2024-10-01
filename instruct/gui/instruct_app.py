@@ -24,7 +24,6 @@ class InstructApp(App):
 
     BINDINGS = [
         Binding(key="q", action="quit", description="Quit", show=True),
-
         Binding(
             key="c",
             action="copy_result",
@@ -32,10 +31,10 @@ class InstructApp(App):
             show=True,
         ),
         Binding(key="r", action="reload", description="Reload", show=True),
+        Binding(key="s", action="save", description="Save to file", show=True),
         Binding(
-            key="s", action="save", description="Save to file", show=True
+            key="l", action="toggle_log_view", description="Show/hide logs", show=True
         ),
-        Binding(key="l", action="toggle_log_view", description="Show/hide logs", show=True),
     ]
 
     max_tokens = reactive(1000)
@@ -67,7 +66,6 @@ class InstructApp(App):
         self.model = (
             self.instruct.matching_model.name
         )  # TODO: fix the update model name in the top menu
-        
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=False)
@@ -89,32 +87,36 @@ class InstructApp(App):
         top_menu = self.query_one("#top_menu")
         top_menu.styles.height = "1fr"
         rich_log = self.query_one("#log")
-        rich_log.styles.height = "1fr"
+        rich_log.styles.height = "0fr"
+        rich_log.styles.visibility = "hidden"
 
         await self.run_instruct()
 
-        
     # @work(thread=True)
     async def run_instruct(self):
         try:
-            self._write_to_log(f"Running instruct with model: {self.instruct.matching_model.model}")
+            self._write_to_log(
+                f"Running instruct with model: {self.instruct.matching_model.model}"
+            )
             self.call_run_instruct()
         except Exception as e:
             self.notify(f"Error running instruct: {e}", severity="error", title="Error")
-    
+
     @work(thread=True)
     def call_run_instruct(self):
         self.query_one("#log").write("Running instruct...")
         self.query_one("#result_viewer").loading = True
         self.instruct.run(
-                        temperature=self.temperature, max_tokens=self.max_tokens,
-                        stream=True,
-                        stream_callback= lambda token: self.app.call_from_thread(self._token_received, token)
-                    )
+            temperature=self.temperature,
+            max_tokens=self.max_tokens,
+            stream=True,
+            stream_callback=lambda token: self.app.call_from_thread(
+                self._token_received, token
+            ),
+        )
 
     def _token_received(self, token):
         try:
-            self._write_to_log("Receiving Token...")
             self.content = token
             if self.content != "":
                 self.query_one("#result_viewer").loading = False
@@ -136,7 +138,15 @@ class InstructApp(App):
 
     def action_reload(self):
         try:
-            # TODO: reload the .instruct file before running
+
+            # Reload the instruct file from disk and re-run it
+            self.instruct = Instruct(
+                filepath=self.instruct_file, **self.input if self.input else {}
+            )
+
+            # clear log
+            self.query_one("#log").clear()
+
             self.query_one("#result_viewer").loading = True
             self.call_after_refresh(self.run_instruct)
         except Exception as e:
@@ -175,17 +185,16 @@ class InstructApp(App):
         raise RuntimeError(
             "Unable to find a non-existent file name after many attempts."
         )
-    
+
     def action_toggle_log_view(self):
         rich_log = self.query_one("#log")
-        current_visibility = rich_log.styles.visibility 
+        current_visibility = rich_log.styles.visibility
         if current_visibility == "hidden":
             rich_log.styles.visibility = "visible"
             rich_log.styles.height = "1fr"
         else:
             rich_log.styles.visibility = "hidden"
             rich_log.styles.height = "0fr"
-        
 
 
 if __name__ == "__main__":
