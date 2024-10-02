@@ -1,8 +1,8 @@
 import logging
-from litellm import completion
+import litellm as llm
 
-logging.basicConfig(level=logging.ERROR)
-
+llm.logging = False
+logging.getLogger("LiteLLM").setLevel(logging.ERROR)
 
 class Model:
     """
@@ -43,12 +43,16 @@ class Model:
             max_tokens (int): Maximum number of tokens in the generated response.
             stream (bool): Whether to stream the response.
             stream_callback (function): Callback function for streaming.
+            api_key (str): API key for the model.
+            api_version (str): API version for the model.
+            base_url (str): Base URL for the model.
 
         Returns:
-            None
+            Response from the model.
         """
         try:
-            completion_result = completion(
+
+            completion_result = llm.completion(
                 model=self.model,
                 api_key=self.api_key,
                 api_version=self.api_version,
