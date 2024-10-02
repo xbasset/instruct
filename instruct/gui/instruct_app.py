@@ -88,6 +88,7 @@ class InstructApp(App):
         rich_log = self.query_one("#log")
         rich_log.styles.height = "0fr"
         rich_log.styles.visibility = "hidden"
+        rich_log.styles.margin = (0, 0, 0, 2)
 
         await self.run_instruct()
 
@@ -140,13 +141,19 @@ class InstructApp(App):
 
             # Reload the instruct file from disk and re-run it
             self.instruct = Instruct(
-                filepath=self.instruct_file, **self.input if self.input else {}
+                filepath=self.instruct_file,
+                input=self.input,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
             )
 
             self.model = self.instruct.matching_model.name
 
             # clear log
             self.query_one("#log").clear()
+            self._write_to_log(
+                f"Reloading instruct with parameters: T°: {self.temperature}, max_tokens: {self.max_tokens}"
+            )
 
             self.query_one("#result_viewer").loading = True
             self.call_after_refresh(self.run_instruct)
@@ -197,7 +204,16 @@ class InstructApp(App):
             rich_log.styles.visibility = "hidden"
             rich_log.styles.height = "0fr"
 
+    def set_temperature(self, temperature):
+        self.notify(f"Setting temperature to {temperature}")
+        self.temperature = float(temperature)
+        self.refresh()
 
+    def set_max_tokens(self, max_tokens):
+        self.notify(f"Setting max tokens to {max_tokens}")
+        self.max_tokens = int(max_tokens)
+        self.refresh()
+        
 if __name__ == "__main__":
     app = InstructApp()
     app.run()

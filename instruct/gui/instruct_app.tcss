@@ -3,7 +3,7 @@ Screen > TopMenu {
     layout: grid;
     grid-size: 5 1;
     margin-top: 1;
-    height: 1;
+    height: 3;
     dock: top;
 }
 

@@ -1,5 +1,6 @@
+from textual import on
 from textual.widget import Widget
-from textual.widgets import Static
+from textual.widgets import Static, Label, Input
 
 from textual.reactive import reactive
 
@@ -19,27 +20,36 @@ class TopMenu(Widget):
         model_label = TopMenuLabel(f"{self.model}", id="top_menu_model_label")
         model_label.styles.color = "lime"
         yield model_label
-        yield TopMenuLabel(f"T°: {self.temperature}", id="top_menu_temperature_label")
-        yield TopMenuLabel(
-            f"Max Output Tokens: {self.max_tokens}", id="top_menu_max_tokens_label"
+        yield TopMenuInput(
+            "T°",
+            self.app.set_temperature,
+            value=self.temperature,
+            id="top_menu_temperature",
         )
-        yield TopMenuLabel("Input Tokens Count", id="top_menu_token_input_label")
-        yield TopMenuLabel("Cost", id="top_menu_cost_label")
+        yield TopMenuInput(
+            f"max_output_tokens", 
+            self.app.set_max_tokens,
+            value=self.max_tokens,
+            id="top_menu_max_tokens"
+        )
+        yield TopMenuLabel("(🔜input_token_count)", id="top_menu_token_input_label")
+        yield TopMenuLabel("(🔜cost)", id="top_menu_cost_label")
 
     def watch_model(self, model):
         if self.is_mounted:
-            model_item:Static = self.query_one("#top_menu_model_label")
+            model_item: Static = self.query_one("#top_menu_model_label")
             model_item.update(model)
 
     def watch_temperature(self, temperature):
         if self.is_mounted:
-            temperature_item:Static = self.query_one("#top_menu_temperature_label")
-            temperature_item.update(f"T°: {temperature}")
-    
+            temperature_item: Input = self.query_one("#top_menu_temperature_input")
+            temperature_item.value = str(temperature)
+
     def watch_max_tokens(self, max_tokens):
         if self.is_mounted:
-            max_tokens_item:Static = self.query_one("#top_menu_max_tokens_label")
-            max_tokens_item.update(f"Max Output Tokens: {max_tokens}")
+            max_tokens_item: Input = self.query_one("#top_menu_max_tokens_input")
+            max_tokens_item.value = str(max_tokens)
+
 
 class TopMenuLabel(Static):
 
@@ -48,3 +58,42 @@ class TopMenuLabel(Static):
         self.styles.content_align = ("center", "middle")
         self.styles.height = "100%"
         self.styles.width = "100%"
+
+
+class TopMenuInput(Widget):
+
+    def __init__(
+        self, label, on_input_submitted_callback: callable, value=None, **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.label = label
+        self.value = value
+        self.styles.content_align = ("center", "middle")
+        self.styles.height = "100%"
+        self.styles.width = "100%"
+        self.on_input_submitted_callback = on_input_submitted_callback
+
+    def compose(self):
+        yield Label(self.label, id=f"{self.id}_label")
+        yield Input(value=str(self.value), type="number", id=f"{self.id}_input")
+
+    def on_mount(self):
+        self.styles.layout = "grid"
+        self.styles.grid_size_columns = 2
+        self.styles.grid_size_rows = 1
+        self.styles.content_align = ("center", "middle")
+        self.styles.height = "100%"
+        self.styles.width = "100%"
+
+        input_widget = self.query_one(f"#{self.id}_input")
+        input_widget.styles.border = None
+
+        label_widget = self.query_one(f"#{self.id}_label")
+        label_widget.styles.content_align = ("right", "middle")
+        label_widget.styles.height = "100%"
+        label_widget.styles.width = "100%"
+
+    @on(Input.Submitted)
+    def on_input_changed(self, event: Input.Submitted):
+        self.value = event.value
+        self.on_input_submitted_callback(event.value)
