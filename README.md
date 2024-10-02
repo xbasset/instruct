@@ -2,7 +2,7 @@
 
  # Instruct
 
-Create, run, and evaluate elaborated instructions for Foundational Models like Large Language Models (LLMs).
+Handcraft, Run, Evaluate Instructions for LLMs
 
 `instruct` is a Python library designed for developers to craft rich instructions, execute them on various LLMs, and evaluate their robustness across different models.
 

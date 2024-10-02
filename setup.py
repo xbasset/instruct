@@ -26,7 +26,7 @@ setup(
     name='instruct',
     version='0.1',
     packages=find_packages(),
-    description="Craft, Run, Evaluate Instructions for Large Language Models",
+    description="Handcraft, Run, Evaluate Instructions for Large Language Models",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     readme="README.md",
