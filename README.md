@@ -10,12 +10,15 @@ Handcraft, Run, Evaluate Instructions for LLMs
 
 - [Instruct](#instruct)
   - [Table of Contents](#table-of-contents)
+  - [Why `instruct`](#why-instruct)
   - [Features](#features)
+    - [1. Handcraft your instructions: VS Code developer worflow](#1-handcraft-your-instructions-vs-code-developer-worflow)
+    - [2. Run \& Evaluate your instructions: Terminal UI](#2-run--evaluate-your-instructions-terminal-ui)
   - [Installation](#installation)
   - [Quick Start](#quick-start)
   - [Usage](#usage)
     - [Creating Instructions](#creating-instructions)
-    - [Running Instructions](#running-instructions)
+    - [Use `.instruct` in your code](#use-instruct-in-your-code)
       - [Python code](#python-code)
       - [CLI](#cli)
     - [Evaluating Instructions](#evaluating-instructions)
@@ -26,19 +29,37 @@ Handcraft, Run, Evaluate Instructions for LLMs
     - [TODO](#todo)
   - [License](#license)
 
+## Why `instruct`
+
+Large Language Models and all the Autoregressive Foundational Models zoo is a population of **statistical interpretation engines**.
+
+Prompting them is all about creating instructions that these models will **interpret** to produce an output, sequence by sequence.
+
+While strong models (think OpenAI gpt-4o, o1 – Mistral Large – Claude 3.5) tend to work with poorly crafted instructions, that's not the case for smaller ones like the 7Bs or 12Bs.
+
+Then, as a developer, when you find a use case that works well and relevant enough, you want to work on reliability and cost. **The idea of switching from a big model to a smaller, maybe local and maybe fine-tuned model comes to play**.
+
+!!! tip Haha!
+    That's where `instruct` stands out to move your *prompts* [from ugly strings collections hidden in your codebase](https://github.com/langchain-ai/langchain/blob/master/templates/hyde/hyde/prompts.py) into a dedicated working space where you have the right tools to handcraft the perfect piece – with a similar experience to writing code.
+
+You want to polish your instructions until they work with smaller models using techniques like few shot examples, chain of thoughts, tree of thoughts and ... you name it.
+
+Your `.instruct` files have the honnor to live next to your code, as their peer, because that's what they are: instructions for an interpretation engine that you are willing to put together to perform the task.
+ 
 ## Features
 
-- **Create Rich Instructions**: Write developer-grade instructions to leverage the full potential of LLMs in the [VS Code Extension](https://github.com/xbasset/vscode-instruct)
-![Instruct VS Code Extension](/assets/vscode-instruct.png)
+### 1. Handcraft your instructions: VS Code developer worflow
+- **Create Rich Instructions and run**: See the interpretation of your `.instruct` for quick iterations in no time with the [VS Code Extension](https://github.com/xbasset/vscode-instruct)
 
-- **Run Instruction GUI**: See the interpretation of your `.instruct` for quick iterations in no time
-![Instruct terminal GUI](/assets/gui-instruct.png)
+![Instruct VS Code Extension](/assets/instruct_demo_extension_0.1.gif)
 
+### 2. Run & Evaluate your instructions: Terminal UI
+
+Explore easily how different LLMs –local and API-based– with different configurations (temperature, max_tokens) behave to find the best (model,conf) combination that matches your requirements in terms of **accuracy**, **speed** and **cost**
 - **CLI**: Execute instructions on different LLMs with easy configuration directly from your CLI
 
-![CLI execution](/assets/instruct-cli.png)
+![CLI execution](/assets/instruct_demo_0.1.gif)
 
-- **[SOON] Evaluate Instructions**: Perform statistical evaluations to ensure the robustness of instructions across multiple models.
 
 ## Installation
 
@@ -96,25 +117,28 @@ Instructions are written in `.instruct` files. These files typically contain:
 Example of an instruction file (`hello_world.instruct`):
 
 ```
-#! gpt-3.5-turbo
-#! gpt-4
+#! gpt-4o
+#! llama3.2
+
 Your task is to say "Hello, World!" to {{ name }}! in a creative way. I mean... very creative way. Like the most creative way you can think of. 
 You have NO limit to imagination.
 Go!
 
 ```
 
-### Running Instructions
+### Use `.instruct` in your code
 
 To run an instruction, use the `Instruct` class:
 
 #### Python code
 ```python
-from instruct.instruct import Instruct
 
-instruct = Instruct("hello_world.instruct", name="Alice")
-result = instruct.run(temperature=0.7, max_tokens=50)
+from instruct import Instruct
+
+instruction = Instruct("hello_world.instruct", name="Alice")
+result = instruction.run(temperature=0.7, max_tokens=50)
 print(result)
+
 ```
 
 #### CLI
@@ -135,43 +159,69 @@ instruct --help
 
 ### Evaluating Instructions
 
-[FUTURE WORK] Run multiple evaluations for a statistical assessment of your `instruction` for a given task.
+[FUTURE WORK] Run multiple evaluations for a statistical assessment of your `instruction` for a given task on multiple models and configurations.
 
 ## Configuration
 
-Instruct uses a YAML configuration file (`models.yaml`) to manage model access:
+Instruct needs to know where your models are. h/t to the [LiteLLM](https://github.com/BerriAI/litellm) team that does the job of staying up to date and serve them for us. Thanks guys.
+
+There's a unique YAML configuration file (`models.yaml`) to manage model access:
 
 ```yaml
-openai:
-  gpt-3.5-turbo:
-    openai_api_key: "your_openai_api_key"
-azure:
-  gpt-4:
-    api_key: "your_azure_api_key"
-    endpoint: "your_azure_endpoint"
-    api_version: "your_azure_api_version"
-    deployment_id: "your_azure_deployment_id"
+
+models:
+  ollama/llama3.1:
+      name: llama3.1
+      base_url: "http://localhost:11434"
+  ollama/gemma2:
+      name: gemma2
+      base_url: "http://localhost:11434"
+  ollama/mistral-nemo:
+      name: mistral-nemo
+      base_url: "http://localhost:11434"
+
+
+  openai/gpt-4o:
+      name: gpt-4o
+      api_key: <your-api-key>
+
+  azure/prod-gpt4o:
+      client: openai
+      name: gpt-4o
+      base_url: <your-endpoint>
+      api_version: <your-api-version>
+      api_key: <your-api-key>
+
+  azure/mistral-large-latest:
+      client: mistral
+      name: mistral-large
+      base_url: <your-endpoint>
+      api_key: <your-api-key>
+  
+  groq/llama3-70b-8192:
+      name: llama3-70b-8192
+      api_key: <your-api-key>
 ```
 
 Place this file in `~/.instruct/models.yaml`.
+See `/models-example-exhaustive.yaml` file for more infos
 
 ## Examples
 
 Explore the `examples` directory for various use cases:
 
-- **Meeting Recap**: `examples/meeting_recap.py`
-- **Translations**: `examples/translations.py`
-- **Rephrase**: `examples/rephrase.py`
-- **Hello World**: `examples/course_material/run_hello_world.py`
+> 🚧 Work in progress
+> Explore the directory, you will find gems of instructions made by the greatests for inspiration.
 
 ## Contributing
 
-We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
+We welcome contributions! Please open an issue and let's start the discussion
+
 
 ### Developer commands
 
 ```
-python3 -m pip install --force-reinstall --quiet . && instruct run examples/instructions/hello_world.instruct --no-interactivity
+python3 -m pip install --force-reinstall --quiet . && instruct run examples/instructions/hello_world.instruct --gui
 ```
 
 ### TODO
@@ -188,6 +238,4 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 
 Instruct is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
----
-
-For more detailed documentation, visit our [GitHub repository](https://github.com/xbasset/instruct). If you encounter any issues or have questions, feel free to open an issue or contact the maintainers. Happy coding!
+If you encounter any issues or have questions, feel free to open an issue or contact me. Happy LLM explorations!
