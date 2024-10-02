@@ -1,10 +1,7 @@
+litellm
 jinja2
 PyYAML
 rich
-# LLM requirements
-mistralai
-openai
-tiktoken
-ollama
-groq
-jsonlines
+typer
+textual
+pyperclip
