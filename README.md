@@ -31,20 +31,18 @@ Handcraft, Run, Evaluate Instructions for LLMs
 
 ## Why `instruct`
 
-Large Language Models and all the Autoregressive Foundational Models zoo is a population of **statistical interpretation engines**.
+Large Language Models (LLMs) are **powerful statistical interpretation engines**.
 
-Prompting them is all about creating instructions that these models will **interpret** to produce an output, sequence by sequence.
+Crafting effective prompts (instructions) for these models is crucial for obtaining accurate outputs. While advanced models like GPT-4o, Claude 3.5, Mistral large can handle poorly crafted instructions, smaller models (e.g., 7B or 12B parameters) struggle.
 
-While strong models (think OpenAI gpt-4o, o1 – Mistral Large – Claude 3.5) tend to work with poorly crafted instructions, that's not the case for smaller ones like the 7Bs or 12Bs.
+When you've got a brilliant idea that works great at scale on a giant model, you want to make it reliable and cost-effective. That's when you start thinking about using a smaller, maybe even local, model. But here's the catch: prompts are critical. A poorly crafted prompt can make a small model spit out garbage.
 
-Then, as a developer, when you find a use case that works well and relevant enough, you want to work on reliability and cost. **The idea of switching from a big model to a smaller, maybe local and maybe fine-tuned model comes to play**.
+This is where `instruct` steps in. Instead of [hiding your prompts in a mess of code]((https://github.com/langchain-ai/langchain/blob/master/templates/hyde/hyde/prompts.py)), `instruct` lets you handcraft them in a dedicated workspace. 
+- **Handcraft Instructions**: Move from unorganized strings to well-crafted `.instruct` files.
+- **Evaluate on Multiple Models**: Test and refine instructions across various LLMs to find the best balance of accuracy, speed, and cost.
 
-!!! tip Haha!
-    That's where `instruct` stands out to move your *prompts* [from ugly strings collections hidden in your codebase](https://github.com/langchain-ai/langchain/blob/master/templates/hyde/hyde/prompts.py) into a dedicated working space where you have the right tools to handcraft the perfect piece – with a similar experience to writing code.
+You can refine your instructions using techniques like few-shot examples, chain of thoughts, and tree of thoughts until they work even on smaller models. Treat your `.instruct` files as first-class citizens in your codebase, right next to your code.
 
-You want to polish your instructions until they work with smaller models using techniques like few shot examples, chain of thoughts, tree of thoughts and ... you name it.
-
-Your `.instruct` files have the honnor to live next to your code, as their peer, because that's what they are: instructions for an interpretation engine that you are willing to put together to perform the task.
  
 ## Features
 
