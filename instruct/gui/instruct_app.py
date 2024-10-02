@@ -205,12 +205,10 @@ class InstructApp(App):
             rich_log.styles.height = "0fr"
 
     def set_temperature(self, temperature):
-        self.notify(f"Setting temperature to {temperature}")
         self.temperature = float(temperature)
         self.refresh()
 
     def set_max_tokens(self, max_tokens):
-        self.notify(f"Setting max tokens to {max_tokens}")
         self.max_tokens = int(max_tokens)
         self.refresh()
         
