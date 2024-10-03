@@ -223,13 +223,13 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 ```
 
 ### TODO
-- CORE > add "import file content" in the .instruct syntax (see Jinja2 features?)
+- CORE > add "import file content" in the .instruct syntax (see Jinja2 features?) => check the vision APIs and validation with selected model here: https://platform.openai.com/docs/guides/vision and https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json
 - FEAT > Display token count of output
 - FEAT > Display prompt view with tokenizer colorization and input token count
 - FIX > --model flag in run command
 - DOC > Create a getting started and tutorial
 - FEAT > Create a wizard for 1st run to initialize ~/.instruct/models.yaml from ENV variables and step by step guide
-- create a README à la https://github.com/darold/pgbadger/blob/master/doc/pgBadger.pod
+- DOC > make README à la https://github.com/darold/pgbadger/blob/master/doc/pgBadger.pod
 - FEAT > In GUI mode, save each calls in ./instruct/dataset pair query<>answer + instruct model used [optional feedback, use case] for further use
 
 ## License
