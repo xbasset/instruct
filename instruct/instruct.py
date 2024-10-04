@@ -1,5 +1,6 @@
 import jinja2
 import re
+import yaml
 
 from instruct.llm_engine.model import Model
 import logging
@@ -13,6 +14,9 @@ logging.basicConfig(level=logging.ERROR)
 
 console = Console()
 
+DEFAULT_TEMPERATURE = 0.7
+DEFAULT_MAX_TOKENS = 1000
+
 
 class Instruct:
     """
@@ -21,25 +25,25 @@ class Instruct:
 
     Attributes:
         filepath (str): The filepath of the Instruct file.
-        shebangs (list): A list of shebangs found in the Instruct file.
+        instruct_models (list): A list of instruct_models found in the Instruct file.
         template (jinja2.Template): The Jinja2 template object representing the Instruct file.
-        models (list): Returns a list of model names extracted from the shebangs.
+        models (list): Returns a list of model names extracted from the instruct_models.
         tags (list): Returns a list of tags extracted from the template.
         template_values (list): Returns a list of jinja2 values extracted from the template.
         prompt (str): Returns the rendered prompt using the provided keyword arguments.
 
     Methods:
-        _parse_file(): Parses the Instruct file and extracts shebangs and template.
+        _parse_file(): Parses the Instruct file and extracts instruct_models and template.
         _perform_templating(**kwargs): Performs templating using the provided keyword arguments.
     """
 
-    def __init__(self, filepath:str, forced_model=None, **kwargs):
+    def __init__(self, filepath: str, forced_model=None, **kwargs):
         self.filepath = filepath
 
         try:
             from instruct.llm_engine.model_loader import ModelLoader
 
-            self.available_models : List[Model]= ModelLoader().models
+            self.available_models: List[Model] = ModelLoader().models
             # console.print(f"[dim]available models: {self.available_models}[/dim]")
         except Exception as e:
             self.available_models = None
@@ -59,16 +63,17 @@ class Instruct:
 
             # store the other arguments for later use
             self.kwargs = kwargs
-            self.shebangs = []
+            self.instruct_models = []
             self.template = None
             self.raw_template = None
+            self.response_format = None
             self._parse_file()
 
             from instruct.llm_engine.model_loader import ModelLoader
 
             self.available_models = ModelLoader().models
             # console.print(f"[dim]available models: {self.available_models}[/dim]")
-            self.models = [d["model"] for d in self.shebangs]
+            self.models = [d["model"] for d in self.instruct_models]
         except Exception as e:
             raise Exception(f"Error initializing Instruct: {e}")
 
@@ -120,7 +125,7 @@ class Instruct:
 
     @property
     def matching_model(self) -> Model:
-        # return the first available model in the config file matching with the shebangs
+        # return the first available model in the config file matching with the instruct_models
         try:
             selected_model = None
             for model in self.models:
@@ -137,38 +142,32 @@ class Instruct:
             return None
 
     def _parse_file(self):
-        """
-        Parses the Instruct file and extracts shebangs and template.
-        """
         try:
             with open(self.filepath, "r") as file:
-                lines = file.readlines()
-                i = 0
-                # find all the shebangs and get their values
-                while lines[i].startswith("#!"):
-                    shebang = lines[i].strip()
-                    match = re.search(r"#!\s*([^/]*)/?([^/]*)?", shebang)
-                    if match is not None:
-                        model, version = match.groups()
-                        self.shebangs.append(
-                            {
-                                "model": model,
-                                "version": version if version else "latest",
-                            }
-                        )
-                    else:
-                        raise ValueError(
-                            f"Invalid shebang: {shebang}\nFormat: #! model(/version)"
-                        )
-                    i += 1
-                # find the first non empty line after shebangs
-                while not lines[i].strip():
-                    i += 1
-                # remove all the empty lines at the end of the file
-                while not lines[-1].strip():
-                    lines.pop()
+                content = file.read()
+                # print(f"File content:\n{content}")  # Debug print
 
-                self.raw_template = "".join(lines[i:])
+                parts = content.split("\n---\n", 1)
+                if len(parts) != 2:
+                    raise ValueError(
+                        "File content is not properly formatted. Expected a header and a template separated by '\\n---\\n'"
+                    )
+
+                header_content, self.raw_template = parts
+                # print(f"Header content:\n{header_content}")  # Debug print
+                # print(f"Raw template:\n{self.raw_template}")  # Debug print
+
+                header = yaml.safe_load(header_content)
+                if header is None:
+                    raise ValueError("Header content is empty or not valid YAML")
+
+                self.instruct_models = [
+                    {"model": model} for model in header.get("models", [])
+                ]
+                self.response_format = header.get("response_format", None)
+
+                # print(f"instruct_models: {self.instruct_models}")
+
                 self.template = jinja2.Template(self.raw_template)
         except FileNotFoundError as e:
             raise FileNotFoundError(f"File not found: {self.filepath}")
@@ -210,7 +209,9 @@ class Instruct:
         """
         return f"Instruct: {self.filepath}"
 
-    def run(self, **kwargs):
+    def run(
+        self, temperature=DEFAULT_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, **kwargs
+    ):
         """
         Run the prompt to the appropriate model.
 
@@ -218,18 +219,23 @@ class Instruct:
             str: The result of the Model call.
         """
         try:
-            # for each model in the shebangs, in order, check if there is a provider for it
+            # for each model in the instruct_models, in order, check if there is a provider for it
             # if there is, call it with the prompt
+
+            # if self.response_format is not None:
+            #     if self.response_format == "json_object":
+            #         kwargs["response_format"] = {"type": "json_object"}
 
             if self.forced_model is not None:
                 logging.info(
                     f"Running prompt with forced model: {self.forced_model.name}"
                 )
-                return self.forced_model.interpret(self, **kwargs)[0]
+
+                return self.forced_model.interpret(self, temperature, max_tokens, **kwargs)
 
             elif self.matching_model is not None:
                 logging.info(f"run with args: {kwargs}")
-                return self.matching_model.interpret(self, **kwargs)[0]
+                return self.matching_model.interpret(self, temperature, max_tokens, **kwargs)
             else:
                 raise Exception(
                     f"""
@@ -238,7 +244,7 @@ providers: {self.available_models}
 Instruct's compatibility list: {self.models}
 To fix the problem:
 1. Check the providers in the ~/.instruct/models.yaml file.
-2. Check the Instruct file's shebangs for compatibility with the providers."""
+2. Check the Instruct file's instruct_models for compatibility with the providers."""
                 )
 
         except Exception as e:

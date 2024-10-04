@@ -32,7 +32,7 @@ class Model:
 
 
     def invoke(
-        self, messages, temperature, max_tokens, stream=False, stream_callback=None
+        self, messages, temperature, max_tokens, stream=False, stream_callback=None, response_format=None
     ):
         """
         Perform a Model chat completion.
@@ -61,6 +61,7 @@ class Model:
                 stream=stream,
                 temperature=temperature,
                 max_tokens=max_tokens,
+                response_format=response_format,
             )
 
             if stream:
@@ -81,7 +82,7 @@ class Model:
             logging.error(f"Error in Model invoke: {e}")
 
     def interpret(
-        self, instruct, temperature, max_tokens, stream=False, stream_callback=None
+        self, instruct, temperature, max_tokens, stream=False, stream_callback=None, response_format=None
     ):
         """
         Perform the interpretation of an Instruct object using the Model.
@@ -104,6 +105,7 @@ class Model:
                 max_tokens=max_tokens,
                 stream=stream,
                 stream_callback=stream_callback,
+                response_format=response_format,
             )
         except Exception as e:
             logging.error(f"Error in Model interpret: {e}")

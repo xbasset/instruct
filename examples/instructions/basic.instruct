@@ -1,10 +1,7 @@
-#! gemma2
-#! llama3-70b-8192
-#! gpt-4o
-#! mistral-nemo
-#! mistral-large-latest
-#! gpt-4o-vision
-#! mistral-large-2407
-#! mixtral-8x7b-32768
+---
+models:
+  - gpt-4o
+  - llama3.1
+---
 
 Write a sonnet of Allemont, le Cornillon, Belledonne, le Taillefer and l'Étendard. This is for tourists who loves nature, hiking, cycling to give a sense of what can be done around Allemont.
