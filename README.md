@@ -194,7 +194,6 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 ```
 
 ### TODO
-- CORE > add options in the .instruct header to allow controlled response_format like JSON and Markdown, and "save" feature to adjust accordingly
 - CORE > think and design the DX of adding input as file or just variables directly from the .instruct file.
 - CORE > add "import file content" in the .instruct syntax (see Jinja2 features?) => check the vision APIs and validation with selected model here: https://platform.openai.com/docs/guides/vision and https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json
 - FEAT > Display token count of output
