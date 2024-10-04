@@ -6,29 +6,6 @@ Handcraft, Run, Evaluate Instructions for LLMs
 
 `instruct` is a Python library designed for developers to craft rich instructions, execute them on various LLMs, and evaluate their robustness across different models.
 
-## Table of Contents
-
-- [Instruct](#instruct)
-  - [Table of Contents](#table-of-contents)
-  - [Why `instruct`](#why-instruct)
-  - [Features](#features)
-    - [1. Handcraft your instructions: VS Code developer worflow](#1-handcraft-your-instructions-vs-code-developer-worflow)
-    - [2. Run \& Evaluate your instructions: Terminal UI](#2-run--evaluate-your-instructions-terminal-ui)
-  - [Installation](#installation)
-  - [Quick Start](#quick-start)
-  - [Usage](#usage)
-    - [Creating Instructions](#creating-instructions)
-    - [Use `.instruct` in your code](#use-instruct-in-your-code)
-      - [Python code](#python-code)
-      - [CLI](#cli)
-    - [Evaluating Instructions](#evaluating-instructions)
-  - [Configuration](#configuration)
-  - [Examples](#examples)
-  - [Contributing](#contributing)
-    - [Developer commands](#developer-commands)
-    - [TODO](#todo)
-  - [License](#license)
-
 ## Why `instruct`
 
 Large Language Models (LLMs) are **powerful statistical interpretation engines**.
@@ -44,20 +21,14 @@ This is where `instruct` steps in. Instead of [hiding your prompts in a mess of 
 You can refine your instructions using techniques like few-shot examples, chain of thoughts, and tree of thoughts until they work even on smaller models. Treat your `.instruct` files as first-class citizens in your codebase, right next to your code.
 
  
-## Features
+## Handcraft your instructions and run them in your IDE
 
-### 1. Handcraft your instructions: VS Code developer worflow
-- **Create Rich Instructions and run**: See the interpretation of your `.instruct` for quick iterations in no time with the [VS Code Extension](https://github.com/xbasset/vscode-instruct)
+Explore easily how different LLMs –local and API-based– with different configurations (temperature, max_tokens) behave to find the best (model,conf) combination that matches your requirements in terms of **accuracy**, **speed** and **cost**
 
 ![Instruct VS Code Extension](/assets/instruct_demo_extension_0.1.gif)
 
-### 2. Run & Evaluate your instructions: Terminal UI
-
-Explore easily how different LLMs –local and API-based– with different configurations (temperature, max_tokens) behave to find the best (model,conf) combination that matches your requirements in terms of **accuracy**, **speed** and **cost**
+- **Create Rich Instructions and run**: See the interpretation of your `.instruct` for quick iterations in no time with the [VS Code Extension](https://github.com/xbasset/vscode-instruct)
 - **CLI**: Execute instructions on different LLMs with easy configuration directly from your CLI
-
-![CLI execution](/assets/instruct_demo_0.1.gif)
-
 
 ## Installation
 
@@ -223,13 +194,15 @@ python3 -m pip install --force-reinstall --quiet . && instruct run examples/inst
 ```
 
 ### TODO
+- CORE > add options in the .instruct header to allow controlled response_format like JSON and Markdown, and "save" feature to adjust accordingly
+- CORE > think and design the DX of adding input as file or just variables directly from the .instruct file.
 - CORE > add "import file content" in the .instruct syntax (see Jinja2 features?) => check the vision APIs and validation with selected model here: https://platform.openai.com/docs/guides/vision and https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json
 - FEAT > Display token count of output
 - FEAT > Display prompt view with tokenizer colorization and input token count
 - FIX > --model flag in run command
 - DOC > Create a getting started and tutorial
 - FEAT > Create a wizard for 1st run to initialize ~/.instruct/models.yaml from ENV variables and step by step guide
-- DOC > make README à la https://github.com/darold/pgbadger/blob/master/doc/pgBadger.pod
+- DOC > make README à la Pydantic (awesome doc with learning curve and "do it" approach)
 - FEAT > In GUI mode, save each calls in ./instruct/dataset pair query<>answer + instruct model used [optional feedback, use case] for further use
 
 ## License
