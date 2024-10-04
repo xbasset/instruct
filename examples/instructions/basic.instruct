@@ -1,7 +1,16 @@
 ---
 models:
   - gpt-4o
-  - llama3.1
+  - llama3.2
+response_format: json_object
 ---
 
+Here's the JSON format that you MUST use for the task:
+<json_format>
+{
+  "content": "<first sentence here>\n<second sentence here>\n[...]<last sentence here>\n."
+}
+</json_format>
+
 Write a sonnet of Allemont, le Cornillon, Belledonne, le Taillefer and l'Étendard. This is for tourists who loves nature, hiking, cycling to give a sense of what can be done around Allemont.
+Answer in the appropriate JSON format. You MUST generate a valid JSON, or I will die. No ``` between the JSON structure. No talk, no tag, just the valid JSON.

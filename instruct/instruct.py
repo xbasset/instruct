@@ -219,12 +219,10 @@ class Instruct:
             str: The result of the Model call.
         """
         try:
-            # for each model in the instruct_models, in order, check if there is a provider for it
-            # if there is, call it with the prompt
 
-            # if self.response_format is not None:
-            #     if self.response_format == "json_object":
-            #         kwargs["response_format"] = {"type": "json_object"}
+            if self.response_format is not None:
+                if self.response_format == "json_object":
+                    kwargs["response_format"] = {"type": "json_object"}
 
             if self.forced_model is not None:
                 logging.info(

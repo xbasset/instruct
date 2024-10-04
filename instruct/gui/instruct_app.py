@@ -106,7 +106,7 @@ class InstructApp(App):
     def call_run_instruct(self):
         self.call_from_thread(lambda : self.query_one("#log").write("Running instruct..."))
         self.call_from_thread(lambda: setattr(self.query_one("#result_viewer"), 'loading', True))
-        self.instruct.run(
+        result = self.instruct.run(
             temperature=self.temperature,
             max_tokens=self.max_tokens,
             stream=True,
@@ -114,6 +114,7 @@ class InstructApp(App):
                 self._token_received, token
             ),
         )
+        self.call_from_thread(lambda: self._token_received(result))
 
     def _token_received(self, token):
         try:
