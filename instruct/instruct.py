@@ -37,7 +37,7 @@ class Instruct:
         _perform_templating(**kwargs): Performs templating using the provided keyword arguments.
     """
 
-    def __init__(self, filepath: str, forced_model=None, **kwargs):
+    def __init__(self, filepath: str, forced_model=None, no_templating=False, **kwargs):
         self.filepath = filepath
 
         try:
@@ -64,6 +64,7 @@ class Instruct:
             # store the other arguments for later use
             self.kwargs = kwargs
             self.instruct_models = []
+            self.no_templating = no_templating
             self.template = None
             self.raw_template = None
             self.response_format = None
@@ -110,6 +111,9 @@ class Instruct:
         Returns:
             str: The rendered prompt.
         """
+        
+        if self.no_templating:
+            return self.raw_template
 
         if self.forced_model is not None:
             logging.info(

@@ -65,7 +65,7 @@ class InstructApp(App):
 
         self.first_token_reiceved = False
         self.instruct = Instruct(
-            filepath=self.instruct_file, **self.input if self.input else {}
+            filepath=self.instruct_file, no_templating=True, **self.input if self.input else {}
         )
         self.model = self.instruct.matching_model.name
 
@@ -146,6 +146,7 @@ class InstructApp(App):
                 input=self.input,
                 temperature=self.temperature,
                 max_tokens=self.max_tokens,
+                no_templating=True,
             )
 
             self.model = self.instruct.matching_model.name
